@@ -4,25 +4,20 @@
     <script type="text/javascript" src="d3.min.js"></script>
 
     <style type="text/css">
-
 			body {
 				text-align: center;
 			}
-
 			article {
 			    width: 50%;
 			    margin: 0 auto;
 			}
-
 			p {
 				font-size: 25px;
 			    text-align: left;
 			}
-
 			h1{
 				font-size: 100px;
 			}
-
 		</style>
 
   </head>
@@ -47,13 +42,11 @@
 	       .attr("cy", 25)
 	      .attr("r", 25)
 	      .style("fill", "white");
-
 	    var circleSelection2 = svgSelection.append("circle")
 	       .attr("cx", 150)
 	       .attr("cy", 25)
 	      .attr("r", 25)
 	      .style("fill", "white");
-
 	    var circleSelection3 = svgSelection.append("circle")
 	       .attr("cx", 275)
 	       .attr("cy", 25)
@@ -68,34 +61,67 @@
 	<script>
 		d3.selectAll("p")
 				.on("click", function() {
-
 					//See which p was clicked
 					var paragraphID = d3.select(this).attr("id");
-
 					//Decide what to do next
 					if (paragraphID == "color") {
-
 						r = Math.random() * 255;
 						g = Math.random() * 255;
 						b = Math.random() * 255;
-
 						circleSelection.style("fill","rgb("+r+","+g+","+b+")");
 						
 						//minus = Math.random() * 50
 						r = r - 50
 						g = g - 50
 						//b = Math.random() * 255
-
 						circleSelection2.style("fill","rgb("+r+","+g+","+b+")");
-
 				    	r = r - 50
 						g = g - 50
 						//b = Math.random() * 255
-
 						circleSelection3.style("fill","rgb("+r+","+g+","+b+")");
-
 						}});
 	</script>
 
+	<article>
+		<p><strong>Figure 1 - The "Most Horror" Films</strong></p>
+	</article>
+
+	<script>
+		//Width and height
+			var h = 250;
+			var w = 500;
+			var barPadding = 1;
+		var dataset = [1,.756, .533, .534, .515, .502];
+		var xScale = d3.scaleLinear()
+				.domain([0, d3.max(dataset, function(d) { return d; })])
+				.range([0, w]);
+			
+			//Create SVG element
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+			svg.selectAll("rect")
+			   .data(dataset)
+			   .enter()
+			   .append("rect")
+			   .attr("y", function(d, i) {
+			   		return i * (h / dataset.length);
+			   })
+			   .attr("x", function(d) {
+			   		return 0;
+			   })
+			   .attr("height", h / dataset.length)
+			   .attr("width", function(d) {
+			   		return xScale(d);
+			   })
+			   .attr("fill", function(d) {
+					return "rgb(0, 0, " + Math.round(d * 255) + ")";
+			   });
+	</script>
+
+	<article>
+		<p>Last paragraph</p>
+	</article>
   </body>
 </html>
