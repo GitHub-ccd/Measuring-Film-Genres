@@ -19,6 +19,11 @@
 			    text-align: left;
 			}
 
+			p.center {
+				font-size: 25px;
+				text-align: center;
+			}
+
 			span {
 				font-size: 25px;
 			    text-align: center;
@@ -34,6 +39,7 @@
 				padding-left: 5px;
 				padding-right: 5px;
 				position:relative;
+  				cursor: pointer;
 			}
 
 			h1{
@@ -57,38 +63,15 @@
     <h3>By <a href="https://www.ogladfelter.com/" target="_blank">Oliver Gladfelter</a></h3>
 
     <article>
-    	<p>Filler text -- intro goes here</p>
+    	<p>A few months ago, two of my friends got into an argument over whether <em>Avengers: Infinity War</em> was a fantasy or a science-fiction film. Deciding to use a credible source to settle their debate, we turned to IMDb, which conveniently cross-lists the movie under <em>both</em> genres. Thus, the debate evolved (devolved?) into whether or not the film is more fantasy or more sci-fi.</p>
+    	<p>Film genres are normally pretty subjective, guaranteeing a fruitless debate. IMDb will tell you what genre any movie falls under, but not to what extent. That is, we can agree <em>Inception</em> and <em>Star Trek</em> are both sci-fi films, but who’s to say which is <strong>more</strong> sci-fi? And no, not which film is futuristic or extraterrestrial - rather, which film more represents science-fiction as a genre, more strongly captures the elements commonly seen throughout the genre. If you were to define “sci-fi” to a young child, which film would you use as an example?</p>
+    	<p>Up until now, there’s been no quantifying movie genre classifications. A movie is either a fantasy, or it isn’t. A movie is either a sci-fi, or it isn’t. To get my friends to shut up about <em>Avengers</em>, I had to change that.</p>
+    	<img src="movieRadar.png" width="100%">
+    	<p>So not only is <em>Avengers: Infinity War</em> more sci-fi than fantasy, it’s also more action and adventure than fantasy. The applications of genre measuring go beyond settling debates, however. Instead of comparing different genre percentages within a single film, we can compare absolute values across all films we’ve collected data on. This reveals which movies are the most defining of any genre of interest. As stated above, “most horror” should not be thought of as scariest, and “most comedy” not as funniest - just the most genre defining.</p>
 	</article>
 
-	<script>
-		var bodySelection = d3.select("body");
-	 
-		var svgSelection = bodySelection.append("svg")
-	       .attr("width", 300)
-	       .attr("height", 50);
-	 
-		var circleSelection = svgSelection.append("circle")
-	       .attr("cx", 25)
-	       .attr("cy", 25)
-	      .attr("r", 25)
-	      .style("fill", "white");
-
-	    var circleSelection2 = svgSelection.append("circle")
-	       .attr("cx", 150)
-	       .attr("cy", 25)
-	      .attr("r", 25)
-	      .style("fill", "white");
-
-	    var circleSelection3 = svgSelection.append("circle")
-	       .attr("cx", 275)
-	       .attr("cy", 25)
-	      .attr("r", 25)
-	      .style("fill", "white");
- 	</script>
-
  	<article>
-		<p id="color">More Text Goes Here, but also click me!</p>
-		<p>Click on any genre to view it's most defining films</p>
+		<p class = "center">Click on any genre to view it's most defining films:</p>
 		<span id="actionFilms">Action</span>
 		<span id="sciFiFilms">Sci-Fi</span>
 		<span id="horrorFilms">Horror</span>
@@ -103,36 +86,6 @@
 	</article>
 
 	<script>
-		d3.selectAll("p")
-				.on("click", function() {
-
-					//See which p was clicked
-					var paragraphID = d3.select(this).attr("id");
-
-					//Decide what to do next
-					if (paragraphID == "color") {
-
-						r = Math.random() * 255;
-						g = Math.random() * 255;
-						b = Math.random() * 255;
-
-						circleSelection.style("fill","rgb("+r+","+g+","+b+")");
-						
-						//minus = Math.random() * 50
-						r = r - 50
-						g = g - 50
-						//b = Math.random() * 255
-
-						circleSelection2.style("fill","rgb("+r+","+g+","+b+")");
-
-				    	r = r - 50
-						g = g - 50
-						//b = Math.random() * 255
-
-						circleSelection3.style("fill","rgb("+r+","+g+","+b+")");
-
-						}	
-					});
 
 			d3.selectAll("span")
 				.on("click", function() {
@@ -322,7 +275,7 @@
 	</script>
 
 	<article>
-		<p>Last paragraph</p>
+		<p>Conclusion</p>
 	</article>
   </body>
 </html>
