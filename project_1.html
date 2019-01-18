@@ -59,14 +59,14 @@
   </head>
   <body>
   	<h1>Measuring Film Genres</h1>
-    <h2>Is It Possible To Quantify The Degree To Which A Film Is An Action?</h2>
+	<h2>Is It Possible To Quantify How 'Action' A Film Is?</h2>
     <h3>By <a href="https://www.ogladfelter.com/" target="_blank">Oliver Gladfelter</a></h3>
 
     <article>
     	<p>A few months ago, two of my friends got into an argument over whether <em>Avengers: Infinity War</em> was a fantasy or a science-fiction film. Deciding to use a credible source to settle their debate, we turned to IMDb, which conveniently cross-lists the movie under <em>both</em> genres. Thus, the debate evolved (devolved?) into whether the film is <em>more</em> fantasy or <em>more</em> sci-fi.</p>
-    	<p>IMDb will tell you what genre any movie falls under, but not to what extent. That is, we can agree <em>Inception</em> and <em>Star Trek</em> are both sci-fi films, but who’s to say which is <strong>more</strong> sci-fi? And no, not which film is more futuristic or extraterrestrial - rather, which film better represents science-fiction as a genre, more strongly captures the elements commonly seen throughout the genre. If you were to define “sci-fi” to a young child, which film would you use as an example?</p>
+    	<p>IMDb will tell you what genre any movie falls under, but not to what extent. That is, we can agree <em>Inception</em> and <em>Star Trek</em> are both sci-fi films, but who’s to say which is <strong>more</strong> sci-fi? And no, not which film is more futuristic or extraterrestrial - rather, which film more represents science-fiction as a genre, more strongly captures the elements commonly seen throughout the genre. If you were to define “sci-fi” to a young child, which film would you use as an example?</p>
     	<p>Up until now, there’s been no quantifying movie genre classifications. A movie is either a fantasy, or it isn’t. A movie is either a sci-fi, or it isn’t. To get my friends to shut up about <em>Avengers</em>, I had to change that.</p>
-    	<img src="movieRadar.png" width="100%">
+    	<img src="images/movieRadar.png" width="100%">
     	<p>So not only is <em>Avengers: Infinity War</em> more sci-fi than fantasy, it’s also more action and adventure than fantasy. The applications of genre measuring go beyond settling debates, however. Instead of comparing different genre percentages within a single film, we can compare absolute values across all films we’ve collected data on. This reveals which movies are the most defining of any genre of interest. As stated above, “most horror” should not be thought of as scariest, and “most comedy” not as funniest - just the most genre defining.</p>
 	</article>
 
@@ -75,13 +75,11 @@
 		<span id="actionFilms">Action</span>
 		<span id="sciFiFilms">Sci-Fi</span>
 		<span id="horrorFilms">Horror</span>
-		<span id="romanceFilms">Romance</span>
 		<p></p>
 		<span id="comedyFilms">Comedy</span>
 		<span id="dramaFilms">Drama</span>
 		<span id="fantasyFilms">Fantasy</span>
 		<span id="thrillerFilms">Thriller</span>
-		<span id="adventureFilms">Adventure</span>
 
 	</article>
 
@@ -95,68 +93,53 @@
 
 					if (spanID == "actionFilms") {
 						//New values for dataset
-						newData = [.389, .383, .379, .377, .372, .369, .369, .368, .368, .366];
-						newLabels = ["Out for Blood (1992)", "American Kickboxer 2 (1993)", "Striking Range (2006)", "Missing in Action 2: The Beginning (1985)", "Storm Catcher (1999)",
-							"The King of the Kickboxers (1990)", "American Ninja 4: The Annihilation (1990)", "Knock Off (1998)", "Night Hunter (1996)", "No Retreat, No Surrender 2 (1987)"];
+						newData = [1.138,1.092,1.05,1.048,1.046,1.043,1.023,1.012,1.006,1.002];
+						newLabels = ["Broken Arrow (1996)", "RED 2 (2013)", "Rambo: First Blood Part II (1985)", "Under Siege (1992)", "Rambo III (1988)", "The Chronicles of Riddick (2004)", "Die Another Day (2002)", "The Expendables 2	(2012)", "xXx: State of the Union (2005)", "Behind Enemy Lines (2001)" ];
 						genreLabel = "Action";
 					}
 
 					else if (spanID == "sciFiFilms") {
 						//New values for dataset
-						newData = [.392, .347, .340, .335, .331, .331, .330, .330, .324, .313];
-						newLabels = ["Battle for Terra (2007)", "Dark Star (1974)", "Creature (1985)", "Starchaser: The Legend of Orin (1985)", "Contact (1997)",
-							"Star Trek: The Motion Picture (1979)", "Magellan (2017)", "Sunshine (2007)", "The Black Hole (1979)", "Red Planet (2000)"];
+						newData = [1.532,1.318,1.296,1.241,1.196,1.183,1.173,1.163,1.128,1.109];
+						newLabels = ["Red Planet (2000)", "Star Trek: The Motion Picture (1979)", "Star Trek: Insurrection (1998)", "Star Trek V: The Final Frontier (1989)", "Final Fantasy: The Spirits Within (2001)", "Star Trek: Generations (1994)", "Stargate (1994)", "Star Trek: First Contact (1996)", "Alien³ (1992)", "Sunshine (2007)"];
 						genreLabel = "Sci-Fi";
 					}
 
 					else if (spanID == "horrorFilms") {
 						//New values for dataset
-						newData = [.756, .533, .534, .515, .502, .496, .494, .493, .488, .480];
+						newData = [1.605,1.596,1.530,1.391,1.387,1.361,1.345,1.319,1.287,1.246];
 						newLabels = labels;
 						genreLabel = "Horror";
 					}
 
-					else if (spanID == "romanceFilms") {
-						//New values for dataset
-						newData = [.404, .372, .366, .363, .359, .358, .357, .353, .349, .338];
-						newLabels = ["Straight-Jacket (2004)", "Eating Out: Drama Camp (2011)", "I Want Your Love (2012)", "A Very Natural Thing (1974)", "The Big Gay Musical (2009)", "Magic in the Moonlight (2014)", "The Age of Innocence (1993)", "Gayby (2012)", "After Sex (2007)", "Untitled (2009)"];
-						genreLabel = "Romance";
-					}
-
 					else if (spanID == "comedyFilms") {
 						//New values for dataset
-						newData = [.444,.420,.374,.371,.356,.355,.354,.347,.345,.341];
-						newLabels = ["The Internship (2013)", "The Benchwarmers (2006)", "Wild Cherry (2009)", "House Broken (2010)", "To Rome with Love (2012)", "The Slammin' Salmon (2009)", "Lost in America (1985)", "Mystery Team (2009)", "Ferris Bueller's Day Off (1986)", "Another Gay Movie (2006)"];
+						newData = [.845,.777,.724,.704,.698,.694,.661,.654,.642,.633];
+						newLabels = ["The Edge of Seventeen (2016)", "Tenacious D in The Pick of Destiny (2006)", "Hall Pass (2011)", "American Reunion	(2012)", "Sex Drive	(2008)", "American Pie 2 (2001)", "Good Luck Chuck (2007)", "The Heartbreak Kid	(2007)", "Turbo	(2013)", "Music and Lyrics (2007)"];
 						genreLabel = "Comedy";
 					}
 
 					else if (spanID == "dramaFilms") {
 						//New values for dataset
-						newData = [.525,.398,.398,.397,.392,.378,.374,.370,.369,.369];
-						newLabels = ["The Man Who Knew Infinity (2015)", "The Other Man (2008)", "Jobs (2013)", "Invictus (2009)", "AWOL (2016)", "Leapin' Leprechauns! (1995)", "Nixon (1995)", "Christmas Mail (2010)", "Luna (1997)", "Hidden Figures (2016)"];
+						newData = [.957,.924,.762,.740,.698,.695,.694,.681,.671,.668];
+						newLabels = ["Men of Honor (2000)", "The Big Sick (2017)", "Marley & Me (2008)", "12 Years a Slave (2013)", "The Graduate (1967)", "The Pursuit of Happyness (2006)", "Hidden Figures (2016)", "Bohemian Rhapsody (2018)", "Walk the Line (2005)", "Julie & Julia (2009)"];
 						genreLabel = "Drama";
 					}
 
 					else if (spanID == "fantasyFilms") {
 						//New values for dataset
-						newData = [.365,.331,.330,.326,.318,.317,.309,.296,.292,.289];
-						newLabels = ["Maleficent (2014)", "Shrek Forever After (2010)", "Alice Through the Looking Glass (2016)", "Dragon Age: Dawn of the Seeker (2012)", "Harry Potter and the Chamber of Secrets (2002)", "The Lord of the Rings (1978)", "Beowulf & Grendel (2005)", "Frozen (2013)", "The Dark Mist (1996)", "Wizards of the Lost Kingdom (1985)"];
+						newData = [1.288,1.191,1.187,1.124,1.062,1.032,1.002,.941,.931,.920];
+						newLabels = ["Shrek Forever After (2010)", "The Sword in the Stone (1963)", "Maleficent (2014)", "Sleeping Beauty (1959)", "Frozen (2013)", "Kubo and the Two Strings (2016)", "Night at the Museum: Secret of the Tomb (2014)", "Snow White and the Huntsman (2012)", "Legend (1985)", "Cinderella (1950)"];
 						genreLabel = "Fantasy";
 					}
 
 					else if (spanID == "thrillerFilms") {
 						//New values for dataset
-						newData = [.326,.304,.304,.285,.283,.281,.281,.278,.274,.273];
-						newLabels = ["The Anderson Tapes (1971)", "Borderline (1980)", "Unthinkable (2010)", "Evidence (2013)", "Emmett's Mark (2002)", "Sin City (2005)", "Vile (2011)", "When a Stranger Calls (1979)", "In the Electric Mist (2009)", "The Adventures of Ford Fairlane (1990)"];
+						newData = [.664,.631,.621,.608,.594,.594,.593,.578,.574,.573];
+						newLabels = ["Assault on Precinct 13 (2005)", "Unthinkable (2010)", "RED 2 (2013)", "Snake Eyes (1998)", "Fargo (1996)", "The Negotiator (1998)", "Safe House (2012)", "Mississippi Burning (1988)", "Taxi Driver (1976)", "Edge of Darkness (2010)"];
 						genreLabel = "Thriller";
 					}
 					
-					else if (spanID == "adventureFilms") {
-						//New values for dataset
-						newData = [.389,.381,.324,.316,.314,.311,.310,.303,.296,.294];
-						newLabels = ["White Fang (1991)", "The Pirates! Band of Misfits (2012)", "The Golden Voyage of Sinbad (1973)", "The Jungle Book 2 (2003)", "The Jungle Book (2016)", "Ice Age: Continental Drift (2012)", "Cutthroat Island (1995)", "Grizzly Mountain (1996)", "Return to Never Land (2002)", "Penguins of Madagascar (2014)"];
-						genreLabel = "Adventure";
-					}
 
 					fig1Label.text('The "Most ' + genreLabel + '" Films');
 
@@ -197,7 +180,7 @@
 						   })
 						   .select("title")
 						   .text(function(d) {
-						   		return genreLabel + " Level: " + d + " / 1";
+						   		return genreLabel + " Level: " + d;
 						   });
 					});
 
@@ -217,7 +200,7 @@
 		var w = 500;
 		var barPadding = 1;
 
-		var dataset = [.756, .533, .534, .515, .502, .496, .494, .493, .488, .480];
+		var dataset = [1.605,1.596,1.530,1.391,1.387,1.361,1.345,1.319,1.287,1.246];
 
 		var xScale = d3.scaleLinear()
 			.domain([0, d3.max(dataset, function(d) { return d; })])
@@ -246,11 +229,10 @@
 			   })
 			   .append("title")
 			   .text(function(d) {
-			   		return "Horror Level: " + d + " / 1";
+			   		return "Horror Level: " + d;
 			   });
 
-			var labels = ["Hell Fest (2018)","Friday the 13th Part III (1982)", "Wacko (1982)", "Friday the 13th: The Final Chapter (1984)", "Old 37 (2015)", "Drive-In Horrorshow (2009)",
-				"The Love Butcher (1975)", "Blood Rage (1987)", "Madman (1981)", "I Dismember Mama (1972)"];
+			var labels = ["Se7en (1995)", "Final Destination 5 (2011)", "Halloween H20: 20 Years Later (1998)", "Saw VI	(2009)", "The Nun (2018)", "Friday the 13th	(2009)", "Annabelle: Creation (2017)", "The Evil Dead (1981)", "The Hills Have Eyes II (2007)", "Paranormal Activity 4 (2012)"];
 
 			svg.selectAll("text")
 			   .data(labels)
