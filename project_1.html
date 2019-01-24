@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="d3.min.js"></script>
+      <title>Measuring Film Genres</title>
+        <script type="text/javascript" src="d3.js"></script>
+        <script src="radarChart4.js" charset="utf-8"></script>
+        <script src="https://unpkg.com/d3-simple-slider/build/d3-simple-slider.js"></script>
+
 
     <style type="text/css">
 
@@ -54,210 +58,1610 @@
 				pointer-events:none;
 			}
 
+            * {
+            box-sizing: border-box;
+            }
+
+            /*the container must be positioned relative:*/
+            .autocomplete {
+            position: relative;
+            display: inline-block;
+            }
+
+            input {
+            border: 1px solid transparent;
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 16px;
+            }
+
+            input[type=text] {
+            background-color: #f1f1f1;
+            width: 100%;
+            }
+
+            input[type=submit] {
+            background-color: DodgerBlue;
+            color: #fff;
+            cursor: pointer;
+            }
+
+            .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+            text-align: left;
+            }
+
+            .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff; 
+            border-bottom: 1px solid #d4d4d4; 
+            }
+
+            /*when hovering an item:*/
+            .autocomplete-items div:hover {
+            background-color: #e9e9e9; 
+            }
+
+            /*when navigating through the items using the arrow keys:*/
+            .autocomplete-active {
+            background-color: DodgerBlue !important; 
+            color: #ffffff; 
+            }
 		</style>
 
   </head>
   <body>
-  	<h1>Measuring Film Genres</h1>
-	<h2>Is It Possible To Quantify How 'Action' A Film Is?</h2>
+      <h1>Measuring Film Genres</h1>
+      
+      <script>
+      // Dyanmically changing subtitle
+      var subTitle = d3.select("body").append("h2").text("Is It Possible To Quantify How 'Action' A Film Is?")
+      var counter = 0
+      function render() {
+        if (counter == 7){
+            counter = 0;
+        }
+        var genreOptions = ["Action", "Comedy", "Drama", "Fantasy", "Horror", "Sci-Fi", "Thriller"]
+        var item = genreOptions[Math.floor(Math.random()*genreOptions.length)];
+        subTitle.text("Is It Possible To Quantify How '"+genreOptions[counter]+"' A Film Is?");
+        counter = counter + 1
+        setTimeout(render, 1000);
+        }
+        render();
+      </script>
     <h3>By <a href="https://www.ogladfelter.com/" target="_blank">Oliver Gladfelter</a></h3>
-
+    
     <article>
     	<p>A few months ago, two of my friends got into an argument over whether <em>Avengers: Infinity War</em> was a fantasy or a science-fiction film. Deciding to use a credible source to settle their debate, we turned to IMDb, which conveniently cross-lists the movie under <em>both</em> genres. Thus, the debate evolved (devolved?) into whether the film is <em>more</em> fantasy or <em>more</em> sci-fi.</p>
     	<p>IMDb will tell you what genre any movie falls under, but not to what extent. That is, we can agree <em>Inception</em> and <em>Star Trek</em> are both sci-fi films, but who’s to say which is <strong>more</strong> sci-fi? And no, not which film is more futuristic or extraterrestrial - rather, which film more represents science-fiction as a genre, more strongly captures the elements commonly seen throughout the genre. If you were to define “sci-fi” to a young child, which film would you use as an example?</p>
     	<p>Up until now, there’s been no quantifying movie genre classifications. A movie is either a fantasy, or it isn’t. A movie is either a sci-fi, or it isn’t. To get my friends to shut up about <em>Avengers</em>, I had to change that.</p>
-    	<img src="AvengersMovieRadar.png" width="100%">
-    	<p>So not only is <em>Avengers: Infinity War</em> more sci-fi than fantasy, it’s also more action and adventure than fantasy. The applications of genre measuring go beyond settling debates, however. Instead of comparing different genre percentages within a single film, we can compare absolute values across all films we’ve collected data on. This reveals which movies are the most defining of any genre of interest. As stated above, “most horror” should not be thought of as scariest, and “most comedy” not as funniest - just the most genre defining.</p>
-	</article>
+    </article>
 
- 	<article>
-		<p class = "center">Click on any genre to view it's most defining films:</p>
-		<span id="actionFilms">Action</span>
-		<span id="sciFiFilms">Sci-Fi</span>
-		<span id="horrorFilms">Horror</span>
-		<p></p>
-		<span id="comedyFilms">Comedy</span>
-		<span id="dramaFilms">Drama</span>
-		<span id="fantasyFilms">Fantasy</span>
-		<span id="thrillerFilms">Thriller</span>
+<!-- Figure 1 - Avengers: Infinity War (2018) Radar Chart -->
+<div class="radarChart" style="display: inline-flex;"></div>
+		<script>
+			//////////////////////////////////////////////////////////////
+			//////////////////////// Set-Up //////////////////////////////
+			//////////////////////////////////////////////////////////////
 
-	</article>
+			var margin = { top: 50, right: 80, bottom: 50, left: 80 },
+				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+				height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
 
-	<script>
+			//////////////////////////////////////////////////////////////
+			////////////////////////// Data //////////////////////////////
+			//////////////////////////////////////////////////////////////       
+            var data = [
+                { name : "Genre Composition for Infinity War",
+					axes: [//genre composition
+						{axis:"Action",value:0.36*100},
+						{axis:"Sci-Fi",value:0.32*100},
+						{axis:"Fantasy",value:0.13*100},
+						{axis:"Comedy",value:0.01*100},
+						{axis:"Drama",value:0.02*100},
+						{axis:"Thriller",value:0.08*100},
+						{axis:"Horror",value:0.07*100}
+                      ]
+                }
+            ];
 
-			d3.selectAll("span")
-				.on("click", function() {
+			var radarChartOptions = {
+			  w: 290,
+			  h: 350,
+			  margin: margin,
+              color: d3.scaleOrdinal().range(["#00A0B0"]),
+			};
 
-					//See which p was clicked
-					var spanID = d3.select(this).attr("id");
-
-					if (spanID == "actionFilms") {
-						//New values for dataset
-						newData = [1.138,1.092,1.05,1.048,1.046,1.043,1.023,1.012,1.006,1.002];
-						newLabels = ["Broken Arrow (1996)", "RED 2 (2013)", "Rambo: First Blood Part II (1985)", "Under Siege (1992)", "Rambo III (1988)", "The Chronicles of Riddick (2004)", "Die Another Day (2002)", "The Expendables 2	(2012)", "xXx: State of the Union (2005)", "Behind Enemy Lines (2001)" ];
-						genreLabel = "Action";
-					}
-
-					else if (spanID == "sciFiFilms") {
-						//New values for dataset
-						newData = [1.532,1.318,1.296,1.241,1.196,1.183,1.173,1.163,1.128,1.109];
-						newLabels = ["Red Planet (2000)", "Star Trek: The Motion Picture (1979)", "Star Trek: Insurrection (1998)", "Star Trek V: The Final Frontier (1989)", "Final Fantasy: The Spirits Within (2001)", "Star Trek: Generations (1994)", "Stargate (1994)", "Star Trek: First Contact (1996)", "Alien³ (1992)", "Sunshine (2007)"];
-						genreLabel = "Sci-Fi";
-					}
-
-					else if (spanID == "horrorFilms") {
-						//New values for dataset
-						newData = [1.605,1.596,1.530,1.391,1.387,1.361,1.345,1.319,1.287,1.246];
-						newLabels = labels;
-						genreLabel = "Horror";
-					}
-
-					else if (spanID == "comedyFilms") {
-						//New values for dataset
-						newData = [.845,.777,.724,.704,.698,.694,.661,.654,.642,.633];
-						newLabels = ["The Edge of Seventeen (2016)", "Tenacious D in The Pick of Destiny (2006)", "Hall Pass (2011)", "American Reunion	(2012)", "Sex Drive	(2008)", "American Pie 2 (2001)", "Good Luck Chuck (2007)", "The Heartbreak Kid	(2007)", "Turbo	(2013)", "Music and Lyrics (2007)"];
-						genreLabel = "Comedy";
-					}
-
-					else if (spanID == "dramaFilms") {
-						//New values for dataset
-						newData = [.957,.924,.762,.740,.698,.695,.694,.681,.671,.668];
-						newLabels = ["Men of Honor (2000)", "The Big Sick (2017)", "Marley & Me (2008)", "12 Years a Slave (2013)", "The Graduate (1967)", "The Pursuit of Happyness (2006)", "Hidden Figures (2016)", "Bohemian Rhapsody (2018)", "Walk the Line (2005)", "Julie & Julia (2009)"];
-						genreLabel = "Drama";
-					}
-
-					else if (spanID == "fantasyFilms") {
-						//New values for dataset
-						newData = [1.288,1.191,1.187,1.124,1.062,1.032,1.002,.941,.931,.920];
-						newLabels = ["Shrek Forever After (2010)", "The Sword in the Stone (1963)", "Maleficent (2014)", "Sleeping Beauty (1959)", "Frozen (2013)", "Kubo and the Two Strings (2016)", "Night at the Museum: Secret of the Tomb (2014)", "Snow White and the Huntsman (2012)", "Legend (1985)", "Cinderella (1950)"];
-						genreLabel = "Fantasy";
-					}
-
-					else if (spanID == "thrillerFilms") {
-						//New values for dataset
-						newData = [.664,.631,.621,.608,.594,.594,.593,.578,.574,.573];
-						newLabels = ["Assault on Precinct 13 (2005)", "Unthinkable (2010)", "RED 2 (2013)", "Snake Eyes (1998)", "Fargo (1996)", "The Negotiator (1998)", "Safe House (2012)", "Mississippi Burning (1988)", "Taxi Driver (1976)", "Edge of Darkness (2010)"];
-						genreLabel = "Thriller";
-					}
-					
-
-					fig1Label.text('The "Most ' + genreLabel + '" Films');
-
-					xScale = d3.scaleLinear()
-								.domain([0, d3.max(newData, function(d) { return d; })])
-								.range([0, w]);
-
-					//Update all labels
-					svg.selectAll("text")
-					   .data(newLabels)
-					   .transition()
-					   .text(function(d) {
-					   		return d;
-					   })
-					   .attr("x", 5)
-					   .attr("y", function(d, i) {
-					   		return i * (h / newLabels.length) + (h / newLabels.length / 2);
-					   })
-					   .attr("font-family", "sans-serif")
-					   .attr("font-size", "18px")
-					   .attr("fill", "white")
-					   .style("dominant-baseline", "middle");
-
-					//Update all rects
-					svg.selectAll("rect")
-						.data(newData)
-						.transition()
-						.attr("y", function(d, i) {
-						   		return i * (h / newData.length);
-						   })
-						   .attr("x", 0)
-						   .attr("height", h / newData.length)
-						   .attr("width", function(d) {
-						   		return xScale(d);
-						   })
-						   .attr("fill", function(d) {
-								return "rgb(0, 0, " + Math.round(d * 255) + ")";
-						   })
-						   .select("title")
-						   .text(function(d) {
-						   		return genreLabel + " Level: " + d;
-						   });
-					});
+			// Draw the chart, get a reference the created svg element :
+			let svg_radar1 = RadarChart(".radarChart", data, radarChartOptions);
+		</script>
 
 
+    <article>
+    	<p>Ultimately, <em>Avengers: Infinity War</em> is much more sci-fi than it is fantasy. It’s also more action than anything. Having settled that debate, I went on to apply my methodology (which you can read more about below) to a total of 2,167 films. You can search for some of your favorite films below to see their genre breakdowns, or you can click on “Random Movie” if you’re not sure where to start. For each film, I’ll also show you others that have similar genre percentages.</p>
+    </article>
+
+<!-- BEGIN interactive searching section -->
+<div id = "dynamicRadarSection">
+
+    <!--Make sure the form has the autocomplete function switched off:-->
+<form autocomplete="off" action="/action_page.php">
+    <div class="autocomplete" style="width:300px;">
+      <input id="myInput" type="text" name="myCountry" placeholder="Search for a movie...">
+    </div>
+    <input type="hidden">
+  </form>
+  <p></p>
+  <span id = "randomMovieSearch">Random Movie</span>
+
+  <p></p>
+  <!-- Random Radar -->
+  <div class="radarChart2" style="display: inline-flex;"></div>
+          <script>
+              //////////////////////////////////////////////////////////////
+              //////////////////////// Set-Up //////////////////////////////
+              //////////////////////////////////////////////////////////////
+  
+              var margin = { top: 50, right: 80, bottom: 50, left: 80 },
+                  width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+                  height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+  
+              //////////////////////////////////////////////////////////////
+              ////////////////////////// Data //////////////////////////////
+              //////////////////////////////////////////////////////////////       
+              var data = [
+                  { name : "Genre Composition for Infinity War",
+                      axes: [//genre composition
+                          {axis:"Action",value:0.36*100},
+                          {axis:"Sci-Fi",value:0.32*100},
+                          {axis:"Fantasy",value:0.13*100},
+                          {axis:"Comedy",value:0.01*100},
+                          {axis:"Drama",value:0.02*100},
+                          {axis:"Thriller",value:0.08*100},
+                          {axis:"Horror",value:0.07*100}
+                        ]
+                  }
+              ];
+  
+              var radarChartOptions = {
+                w: 290,
+                h: 350,
+                margin: margin,
+                color: d3.scaleOrdinal().range(["#00A0B0"]),
+              };
+  
+              // Draw the chart, get a reference the created svg element :
+              let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions);
+          </script>
+          <!-- ------------------------------------- -->
+  
+  <script>
+  function autocomplete(inp, arr) {
+    /*the autocomplete function takes two arguments,
+    the text field element and an array of possible autocompleted values:*/
+    var currentFocus;
+    /*execute a function when someone writes in the text field:*/
+    inp.addEventListener("input", function(e) {
+        var a, b, i, val = this.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) { return false;}
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        this.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+          /*check if the item starts with the same letters as the text field value:*/
+          if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            /*create a DIV element for each matching element:*/
+            b = document.createElement("DIV");
+            /*make the matching letters bold:*/
+            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+            b.innerHTML += arr[i].substr(val.length);
+            /*insert a input field that will hold the current array item's value:*/
+            b.innerHTML += '<input type="hidden" value="' +  arr[i] + '">';
+            /*execute a function when someone clicks on the item value (DIV element):*/
+            b.addEventListener("click", function(e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[0].value;
+
+                /* Update the radar chart with new movie */
+
+                dataset = d3.csv("moviesDataJan.csv", function(data) {
+      for (var i=0;i<2167; i++) {
+          if (data[i].title + " ("+data[i].year+")" == document.getElementById("myInput").value) {
+              
+              movieTitle = data[i].title;
+              movieYear = data[i].year;
+              actionPer = data[i].actionPer;
+              comedyPer = data[i].comedyPer;
+              dramaPer = data[i].dramaPer;
+              fantasyPer = data[i].fantasyPer;
+              horrorPer = data[i].horrorPer;
+              scifiPer = data[i].scifiPer;
+              thrillerPer = data[i].thrillerPer;
 
 
-	</script>
+              smallestDistance = 100;
+                dict = {};
 
-	<script>
+                // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
+                for (var i=0;i<2167; i++) {
+                    var similarMovieTitle = data[i].title;
+                    var similarYear = data[i].year;
+                    var actionPer2 = data[i].actionPer;
+                    var comedyPer2 = data[i].comedyPer;
+                    var dramaPer2 = data[i].dramaPer;
+                    var fantasyPer2 = data[i].fantasyPer;
+                    var horrorPer2 = data[i].horrorPer;
+                    var scifiPer2 = data[i].scifiPer;
+                    var thrillerPer2 = data[i].thrillerPer;
 
-		var fig1Label = d3.select("body").append("h2")
+                    distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
+                    
+                    // Add movie info and similarity score to dictionary
+                    dict[similarMovieTitle + " (" + similarYear + ")"] = 100 - distance;
+                    
+                    //alert((100-distance).toString()+"% Match")
+                    };
+                
+                // sort dictionary by distance
+                // Create items array
+                var items = Object.keys(dict).map(function(key) {
+                return [key, dict[key]];
+                });
 
-		fig1Label.text('The "Most Horror" Films');
+                // Sort the array based on the second element
+                items.sort(function(first, second) {
+                return second[1] - first[1];
+                });
 
-		//Width and height
-		var h = 500;
-		var w = 500;
-		var barPadding = 1;
+                // Create a new array with only the first 5 items
+                mostSimilarMovies = items.slice(1, 6);
+            
+                if (Object.values(mostSimilarMovies)[0][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[1][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[2][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[3][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[4][0].length > 36){
+                    var fontSize = "16px"
+                }
+                
+                mostSimilar1.text(Object.values(mostSimilarMovies)[0][0]).style("font-size", fontSize)
+                mostSimilar1Per.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "%")   
+                mostSimilar2.text(Object.values(mostSimilarMovies)[1][0]).style("font-size", fontSize)
+                mostSimilar2Per.text(Object.values(mostSimilarMovies)[1][1].toFixed(0) + "%")
+                mostSimilar3.text(Object.values(mostSimilarMovies)[2][0]).style("font-size", fontSize)
+                mostSimilar3Per.text(Object.values(mostSimilarMovies)[2][1].toFixed(0) + "%")
+                mostSimilar4.text(Object.values(mostSimilarMovies)[3][0]).style("font-size", fontSize)
+                mostSimilar4Per.text(Object.values(mostSimilarMovies)[3][1].toFixed(0) + "%")
+                mostSimilar5.text(Object.values(mostSimilarMovies)[4][0]).style("font-size", fontSize)
+                mostSimilar5Per.text(Object.values(mostSimilarMovies)[4][1].toFixed(0) + "%")
+              
+         
+  
+          var margin = { top: 50, right: 80, bottom: 50, left: 80 },
+          width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+          height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+  
+      //////////////////////////////////////////////////////////////
+      ////////////////////////// Data //////////////////////////////
+      //////////////////////////////////////////////////////////////       
+      var data = [
+          { name : movieTitle + " ("+movieYear+")",
+              axes: [//genre composition
+                  {axis:"Action",value:actionPer*100},
+                  {axis:"Sci-Fi",value:scifiPer*100},
+                  {axis:"Fantasy",value:fantasyPer*100},
+                  {axis:"Comedy",value:comedyPer*100},
+                  {axis:"Drama",value:dramaPer*100},
+                  {axis:"Thriller",value:thrillerPer*100},
+                  {axis:"Horror",value:horrorPer*100}
+                ]
+          }
+      ];
+      
+      //If the supplied maxValue is smaller than the actual one, replace by the max in the data
+      var maxValue = 0; //keep track of highest value
+      var blobColor = "green";
+  
+      colors = ["red","blue","#E66EF2","green","#03B58D","#4D1053","maroon"];
+      var blobColor = "green";
+      var index = 0
+  
+      for (let j=0; j < data.length; j++) {
+          for (let i = 0; i < data[j].axes.length; i++) {
+              data[j].axes[i]['id'] = data[j].name;
+              if (data[j].axes[i]['value'] > maxValue) {
+                  maxValue = data[j].axes[i]['value'];
+                  blobColor = colors[i] // Select color corresponding to the max genre
+              }
+          }
+      }
+  
+      var radarChartOptions = {
+        w: 290,
+        h: 350,
+        margin: margin,
+        color: d3.scaleOrdinal().range([blobColor]),
+      };
+  
+      // Draw the chart, get a reference the created svg element :
+      let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions);
+      
+          }
+          };
+          })
 
-		var dataset = [1.605,1.596,1.530,1.391,1.387,1.361,1.345,1.319,1.287,1.246];
 
-		var xScale = d3.scaleLinear()
-			.domain([0, d3.max(dataset, function(d) { return d; })])
-			.range([0, w]);
-			
-			//Create SVG element
-		var svg = d3.select("body")
-			.append("svg")
-			.attr("width", w)
-			.attr("height", h);
+                /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+                closeAllLists();
+            });
+            a.appendChild(b);
+          }
+        }
+    });
+    /*execute a function presses a key on the keyboard:*/
+    inp.addEventListener("keydown", function(e) {
+        var x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+          /*If the arrow DOWN key is pressed,
+          increase the currentFocus variable:*/
+          currentFocus++;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 38) { //up
+          /*If the arrow UP key is pressed,
+          decrease the currentFocus variable:*/
+          currentFocus--;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 13) {
+          /*If the ENTER key is pressed, prevent the form from being submitted,*/
+          e.preventDefault();
+          if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (x) x[currentFocus].click();
+          }
+        }
+    });
+    function addActive(x) {
+      /*a function to classify an item as "active":*/
+      if (!x) return false;
+      /*start by removing the "active" class on all items:*/
+      removeActive(x);
+      if (currentFocus >= x.length) currentFocus = 0;
+      if (currentFocus < 0) currentFocus = (x.length - 1);
+      /*add class "autocomplete-active":*/
+      x[currentFocus].classList.add("autocomplete-active");
+    }
+    function removeActive(x) {
+      /*a function to remove the "active" class from all autocomplete items:*/
+      for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("autocomplete-active");
+      }
+    }
+    function closeAllLists(elmnt) {
+      /*close all autocomplete lists in the document,
+      except the one passed as an argument:*/
+      var x = document.getElementsByClassName("autocomplete-items");
+      for (var i = 0; i < x.length; i++) {
+        if (elmnt != x[i] && elmnt != inp) {
+          x[i].parentNode.removeChild(x[i]);
+        }
+      }
+    }
+    /*execute a function when someone clicks in the document:*/
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+  }
+  
+  /*An array to be filled with all the movie titles in the dataset*/
+  var movies = []
+  
+  dataset = d3.csv("moviesDataJan.csv", function(d) {
+      for (var i=0;i<2167; i++) {
+      movies.push(d[i].title + " ("+d[i].year+")")
+    };
+  })
+  
+  /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+  autocomplete(document.getElementById("myInput"), movies);
+  
+  /* UPDATE RADAR CHART WITH RANDOM MOVIE*/
+  d3.select("#dynamicRadarSection").selectAll("span").on("click", function() {
+  
+      //See which p was clicked
+      var spanID = d3.select(this).attr("id");
+  
+      if (spanID == "randomMovieSearch") {
+  
+          dataset = d3.csv("moviesDataJan.csv", function(data) {
+              randomNum = Math.floor((Math.random() * 2167) + 1);
+  
+              movieTitle = data[randomNum].title;
+              movieYear = data[randomNum].year;
+              actionPer = data[randomNum].actionPer;
+              comedyPer = data[randomNum].comedyPer;
+              dramaPer = data[randomNum].dramaPer;
+              fantasyPer = data[randomNum].fantasyPer;
+              horrorPer = data[randomNum].horrorPer;
+              scifiPer = data[randomNum].scifiPer;
+              thrillerPer = data[randomNum].thrillerPer;
+          
+              smallestDistance = 100;
+                dict = {};
 
-		svg.selectAll("rect")
-			.data(dataset)
-			.enter()
-			.append("rect")
-			.attr("y", function(d, i) {
-			   		return i * (h / dataset.length);
-			   })
-			   .attr("x", 0)
-			   .attr("height", h / dataset.length)
-			   .attr("width", function(d) {
-			   		return xScale(d);
-			   })
-			   .attr("fill", function(d) {
-					return "rgb(0, 0, " + Math.round(d * 255) + ")";
-			   })
-			   .append("title")
-			   .text(function(d) {
-			   		return "Horror Level: " + d;
-			   });
+                // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
+                for (var i=0;i<2167; i++) {
+                    var similarMovieTitle = data[i].title;
+                    var similarYear = data[i].year;
+                    var actionPer2 = data[i].actionPer;
+                    var comedyPer2 = data[i].comedyPer;
+                    var dramaPer2 = data[i].dramaPer;
+                    var fantasyPer2 = data[i].fantasyPer;
+                    var horrorPer2 = data[i].horrorPer;
+                    var scifiPer2 = data[i].scifiPer;
+                    var thrillerPer2 = data[i].thrillerPer;
 
-			var labels = ["Se7en (1995)", "Final Destination 5 (2011)", "Halloween H20: 20 Years Later (1998)", "Saw VI	(2009)", "The Nun (2018)", "Friday the 13th	(2009)", "Annabelle: Creation (2017)", "The Evil Dead (1981)", "The Hills Have Eyes II (2007)", "Paranormal Activity 4 (2012)"];
+                    distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
+                    
+                    // Add movie info and similarity score to dictionary
+                    dict[similarMovieTitle + " (" + similarYear + ")"] = 100 - distance;
+                    
+                    //alert((100-distance).toString()+"% Match")
+                    };
+                
+                // sort dictionary by distance
+                // Create items array
+                var items = Object.keys(dict).map(function(key) {
+                return [key, dict[key]];
+                });
 
-			svg.selectAll("text")
-			   .data(labels)
-			   .enter()
-			   .append("text")
-			   .text(function(d) {
-			   		return d;
-			   })
-			   .attr("x", 5)
-			   .attr("y", function(d, i) {
-			   		return i * (h / dataset.length) + (h / dataset.length / 2);
-			   })
-			   .attr("font-family", "sans-serif")
-			   .attr("font-size", "18px")
-			   .attr("fill", "white")
-			   .style("dominant-baseline", "middle")
-			   .append("title")
-			   .text(function(d, i) {
-			   		return "Horror Level: " + dataset[i] + " / 1";
-			   });
+                // Sort the array based on the second element
+                items.sort(function(first, second) {
+                return second[1] - first[1];
+                });
 
-	</script>
+                // Create a new array with only the first 5 items
+                mostSimilarMovies = items.slice(1, 6);
+                
+
+                if (Object.values(mostSimilarMovies)[0][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[1][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[2][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[3][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[4][0].length > 36){
+                    var fontSize = "16px"
+                }
+                
+                mostSimilar1.text(Object.values(mostSimilarMovies)[0][0]).style("font-size", fontSize)
+                mostSimilar1Per.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "%")   
+                mostSimilar2.text(Object.values(mostSimilarMovies)[1][0]).style("font-size", fontSize)
+                mostSimilar2Per.text(Object.values(mostSimilarMovies)[1][1].toFixed(0) + "%")
+                mostSimilar3.text(Object.values(mostSimilarMovies)[2][0]).style("font-size", fontSize)
+                mostSimilar3Per.text(Object.values(mostSimilarMovies)[2][1].toFixed(0) + "%")
+                mostSimilar4.text(Object.values(mostSimilarMovies)[3][0]).style("font-size", fontSize)
+                mostSimilar4Per.text(Object.values(mostSimilarMovies)[3][1].toFixed(0) + "%")
+                mostSimilar5.text(Object.values(mostSimilarMovies)[4][0]).style("font-size", fontSize)
+                mostSimilar5Per.text(Object.values(mostSimilarMovies)[4][1].toFixed(0) + "%")
+
+          var margin = { top: 50, right: 80, bottom: 50, left: 80 },
+          width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+          height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+  
+      //////////////////////////////////////////////////////////////
+      ////////////////////////// Data //////////////////////////////
+      //////////////////////////////////////////////////////////////       
+      var data = [
+          { name : movieTitle + " ("+movieYear+")",
+              axes: [//genre composition
+                  {axis:"Action",value:actionPer*100},
+                  {axis:"Sci-Fi",value:scifiPer*100},
+                  {axis:"Fantasy",value:fantasyPer*100},
+                  {axis:"Comedy",value:comedyPer*100},
+                  {axis:"Drama",value:dramaPer*100},
+                  {axis:"Thriller",value:thrillerPer*100},
+                  {axis:"Horror",value:horrorPer*100}
+                ]
+          }
+      ];
+      
+      //If the supplied maxValue is smaller than the actual one, replace by the max in the data
+      var maxValue = 0; //keep track of highest value
+      var blobColor = "green";
+  
+      colors = ["red","blue","#E66EF2","green","#03B58D","#4D1053","maroon"];
+      var blobColor = "green";
+      var index = 0
+  
+      for (let j=0; j < data.length; j++) {
+          for (let i = 0; i < data[j].axes.length; i++) {
+              data[j].axes[i]['id'] = data[j].name;
+              if (data[j].axes[i]['value'] > maxValue) {
+                  maxValue = data[j].axes[i]['value'];
+                  blobColor = colors[i] // Select color corresponding to the max genre
+              }
+          }
+      }
+  
+      var radarChartOptions = {
+        w: 290,
+        h: 350,
+        margin: margin,
+        color: d3.scaleOrdinal().range([blobColor]),
+      };
+  
+      // Draw the chart, get a reference the created svg element :
+      let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions);
+          })
+      }
+      })
+  </script>
+
+    <script>
+        var svgForSimilarMovies = d3.select("#dynamicRadarSection")
+            .append("svg")
+            .attr("width", 450)
+            .attr("height", 450)
+        
+        //Create Title 
+        svgForSimilarMovies.append("text")
+            .attr("x", 250)
+            .attr("y", 25)
+            .attr('text-alignment','center')
+            .attr("font-size","23px")
+            .attr("font-weight","bold")
+            .style("text-anchor", "middle")
+            .text("Films With Similar Genre Scores");
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 75)
+            .attr("font-size","20px")
+            .text("1) ")
+
+        var mostSimilar1 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 75)
+            .attr("font-size","20px")
+            .text("Thor: Ragnarok (2017)")
+
+        var mostSimilar1Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 75)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("98%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 150)
+            .attr("font-size","20px")
+            .text("2) ")
+
+        var mostSimilar2 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 150)
+            .attr("font-size","20px")
+            .text("Justice League (2017)")
+
+        var mostSimilar2Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 150)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("98%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 225)
+            .attr("font-size","20px")
+            .text("3) ")
+
+        var mostSimilar3 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 225)
+            .attr("font-size","20px")
+            .text("Star Wars: The Last Jedi (2017)")
+
+        var mostSimilar3Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 225)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("97%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 300)
+            .attr("font-size","20px")
+            .text("4) ")
+
+        var mostSimilar4 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 300)
+            .attr("font-size","20px")
+            .text("Avengers: Age of Ultron (2015)")
+
+        var mostSimilar4Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 300)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("97%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 375)
+            .attr("font-size","20px")
+            .text("5) ")
+
+        var mostSimilar5 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 375)
+            .attr("font-size","20px")
+            .text("Guardians of the Galaxy Vol. 2 (2017)")
+
+        var mostSimilar5Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 375)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("96%")
+    </script>
+
+    
+ 
+</div>
+<!-- -------------------------------------------------------- -->
+
+<article>
+<p>Interested in watching a movie that’s the perfect combination of all your favorite genres? Use the sliders below to find what movies most closely what you’re looking for. You can also try searching for a film above, then manipulating the genre levels to see what your favorite movie would resemble with half the action, or twice the fantasy, etc. Remember that for best results, percentages across all seven genres should total 100%.</p>
+</article>
+
+<!-- CUSTOM GENRE COMPOSITION SECTION -->
+<div id = "customCompSection">
+        <script>
+
+                actionValue = 0
+                comedyValue = 0
+                dramaValue = 0
+                fantasyValue = 0
+                horrorValue = 0
+                scifiValue = 0
+                thrillerValue = 0
+                
+                var sliderSvg = d3.select("body")
+                            .append("svg")
+                            .attr("width", 450)
+                            .attr("height", 490);
+
+                // Title
+                sliderSvg.append("text")
+                    .attr("x", 250)
+                    .attr("y", 25)
+                    .attr('text-alignment','center')
+                    .attr("font-size","23px")
+                    .attr("font-weight","bold")
+                    .style("text-anchor", "middle")
+                    .text("Test Your Own Genre Levels");
+                      
+                // Total Value of All Sliders
+                var SliderPersTotal = sliderSvg.append("text")
+                    .attr("x",335)
+                    .attr("y",490)
+                    .attr("font-size","18px")
+                    .text("Total: 0%");
+                
+                  // Action Slider
+                  var actionSlider = d3
+                    .sliderBottom()
+                    .min(0)
+                    .max(1)
+                    .width(200)
+                    .tickFormat(d3.format('.0%'))
+                    .ticks(5)
+                    .default(.36)
+                    .fill('blue')
+                    .handle(
+                      d3
+                        .symbol()
+                        .type(d3.symbolCircle)
+                        .size(200)()
+                    )
+                    .on('onchange', val => {
+                      actionSliderLabel.text("Action: " + d3.format('.0%')(val));
+                      actionValue = (val*100).toFixed(0)
+                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
+                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
+                        SliderPersTotal.style("fill","red")
+                      }
+                      else{
+                        SliderPersTotal.style("fill","black") 
+                      }
+                      updateFromCustomPers()
+                    });
+                
+                  svgActionSlider = sliderSvg.append("svg")
+                    .attr('width', 450)
+                    .attr('height', 100)
+                    .append('g')
+                    .attr('transform', 'translate(200,60)');
+                    
+                    svgActionSlider.call(actionSlider)
+                
+                 actionSliderLabel = sliderSvg.append("text")
+                    .attr("x",20)
+                    .attr("y",70)
+                    .attr('text-alignment','center')
+                    .text("Action: 0%")
+                
+                  // Comedy Slider
+                  var comedySlider = d3
+                    .sliderBottom()
+                    .min(0)
+                    .max(1)
+                    .width(200)
+                    .tickFormat(d3.format('.0%'))
+                    .ticks(5)
+                    .default(0)
+                    .fill('blue')
+                    .handle(
+                      d3
+                        .symbol()
+                        .type(d3.symbolCircle)
+                        .size(200)()
+                    )
+                    .on('onchange', val => {
+                      comedySliderLabel.text("Comedy: " + d3.format('.0%')(val));
+                      comedyValue = (val*100).toFixed(0)
+                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
+                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
+                        SliderPersTotal.style("fill","red")
+                      }
+                      else{
+                        SliderPersTotal.style("fill","black") 
+                      }
+                      updateFromCustomPers()
+                    });
+                
+                  svgComedySlider = sliderSvg.append("svg")
+                    .attr('width', 450)
+                    .attr('height', 200)
+                    .append('g')
+                    .attr('transform', 'translate(200,120)');
+                    
+                    svgComedySlider.call(comedySlider)
+                
+                 comedySliderLabel = sliderSvg.append("text")
+                    .attr("x",20)
+                    .attr("y",130)
+                    .attr('text-alignment','center')
+                    .text("Comedy: 0%")
+                
+                  // Drama Slider
+                  var dramaSlider = d3
+                    .sliderBottom()
+                    .min(0)
+                    .max(1)
+                    .width(200)
+                    .tickFormat(d3.format('.0%'))
+                    .ticks(5)
+                    .default(0)
+                    .fill('blue')
+                    .handle(
+                      d3
+                        .symbol()
+                        .type(d3.symbolCircle)
+                        .size(200)()
+                    )
+                    .on('onchange', val => {
+                      dramaSliderLabel.text("Drama: " + d3.format('.0%')(val));
+                      dramaValue = (val*100).toFixed(0)
+                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
+                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
+                        SliderPersTotal.style("fill","red")
+                      }
+                      else{
+                        SliderPersTotal.style("fill","black") 
+                      }
+                      updateFromCustomPers()
+                    });
+                
+                  svgDramaSlider = sliderSvg.append("svg")
+                    .attr('width', 450)
+                    .attr('height', 300)
+                    .append('g')
+                    .attr('transform', 'translate(200,180)');
+                    
+                    svgDramaSlider.call(dramaSlider)
+                
+                 dramaSliderLabel = sliderSvg.append("text")
+                    .attr("x",20)
+                    .attr("y",190)
+                    .attr('text-alignment','center')
+                    .text("Drama: 0%")
+                
+                // Fantasy Slider
+                var fantasySlider = d3
+                    .sliderBottom()
+                    .min(0)
+                    .max(1)
+                    .width(200)
+                    .tickFormat(d3.format('.0%'))
+                    .ticks(5)
+                    .default(0)
+                    .fill('blue')
+                    .handle(
+                      d3
+                        .symbol()
+                        .type(d3.symbolCircle)
+                        .size(200)()
+                    )
+                    .on('onchange', val => {
+                      fantasySliderLabel.text("Fantasy: " + d3.format('.0%')(val));
+                      fantasyValue = (val*100).toFixed(0)
+                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
+                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
+                        SliderPersTotal.style("fill","red")
+                      }
+                      else{
+                        SliderPersTotal.style("fill","black") 
+                      }
+                      updateFromCustomPers()
+                    });
+                
+                  svgFantasySlider = sliderSvg.append("svg")
+                    .attr('width', 450)
+                    .attr('height', 300)
+                    .append('g')
+                    .attr('transform', 'translate(200,240)');
+                    
+                    svgFantasySlider.call(fantasySlider)
+                
+                    fantasySliderLabel = sliderSvg.append("text")
+                    .attr("x",20)
+                    .attr("y",250)
+                    .attr('text-alignment','center')
+                    .text("Fantasy: 0%")
+                
+                // Horror Slider
+                var horrorSlider = d3
+                    .sliderBottom()
+                    .min(0)
+                    .max(1)
+                    .width(200)
+                    .tickFormat(d3.format('.0%'))
+                    .ticks(5)
+                    .default(0)
+                    .fill('blue')
+                    .handle(
+                      d3
+                        .symbol()
+                        .type(d3.symbolCircle)
+                        .size(200)()
+                    )
+                    .on('onchange', val => {
+                      horrorSliderLabel.text("Horror: " + d3.format('.0%')(val));
+                      horrorValue = (val*100).toFixed(0)
+                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
+                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
+                        SliderPersTotal.style("fill","red")
+                      }
+                      else{
+                        SliderPersTotal.style("fill","black") 
+                      }
+                      updateFromCustomPers()
+                    });
+                
+                  svgHorrorSlider = sliderSvg.append("svg")
+                    .attr('width', 450)
+                    .attr('height', 350)
+                    .append('g')
+                    .attr('transform', 'translate(200,300)');
+                    
+                    svgHorrorSlider.call(horrorSlider)
+                
+                    horrorSliderLabel = sliderSvg.append("text")
+                    .attr("x",20)
+                    .attr("y",310)
+                    .attr('text-alignment','center')
+                    .text("Horror: 0%")
+                
+                // Sci-Fi Slider
+                var scifiSlider = d3
+                    .sliderBottom()
+                    .min(0)
+                    .max(1)
+                    .width(200)
+                    .tickFormat(d3.format('.0%'))
+                    .ticks(5)
+                    .default(0)
+                    .fill('blue')
+                    .handle(
+                      d3
+                        .symbol()
+                        .type(d3.symbolCircle)
+                        .size(200)()
+                    )
+                    .on('onchange', val => {
+                      scifiSliderLabel.text("Sci-Fi: " + d3.format('.0%')(val));
+                      scifiValue = (val*100).toFixed(0)
+                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
+                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
+                        SliderPersTotal.style("fill","red")
+                      }
+                      else{
+                        SliderPersTotal.style("fill","black") 
+                      }
+                      updateFromCustomPers()
+                    });
+                
+                  svgScifiSlider = sliderSvg.append("svg")
+                    .attr('width', 450)
+                    .attr('height', 420)
+                    .append('g')
+                    .attr('transform', 'translate(200,360)');
+                    
+                    svgScifiSlider.call(scifiSlider)
+                
+                    scifiSliderLabel = sliderSvg.append("text")
+                    .attr("x",20)
+                    .attr("y",370)
+                    .attr('text-alignment','center')
+                    .text("Sci-Fi: 0%")
+                
+                // Thriller Slider
+                var thrillerSlider = d3
+                    .sliderBottom()
+                    .min(0)
+                    .max(1)
+                    .width(200)
+                    .tickFormat(d3.format('.0%'))
+                    .ticks(5)
+                    .default(0)
+                    .fill('blue')
+                    .handle(
+                      d3
+                        .symbol()
+                        .type(d3.symbolCircle)
+                        .size(200)()
+                    )
+                    .on('onchange', val => {
+                      thrillerSliderLabel.text("Thriller: " + d3.format('.0%')(val));
+                      thrillerValue = (val*100).toFixed(0)
+                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
+                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
+                        SliderPersTotal.style("fill","red")
+                      }
+                      else{
+                        SliderPersTotal.style("fill","black") 
+                      }
+                      updateFromCustomPers()
+                    });
+                
+                  svgThrillerSlider = sliderSvg.append("svg")
+                    .attr('width', 450)
+                    .attr('height', 480)
+                    .append('g')
+                    .attr('transform', 'translate(200,420)');
+                    
+                    svgThrillerSlider.call(thrillerSlider)
+                
+                    thrillerSliderLabel = sliderSvg.append("text")
+                    .attr("x",20)
+                    .attr("y",430)
+                    .attr('text-alignment','center')
+                    .text("Thriller: 0%")
+
+    // Add and Update similar List
+  function updateFromCustomPers(){
+    dataset = d3.csv("moviesDataJan.csv", function(data) {
+              
+              actionPer = actionValue / 100
+              comedyPer = comedyValue / 100
+              dramaPer = dramaValue / 100
+              fantasyPer = fantasyValue / 100
+              horrorPer = horrorValue / 100
+              scifiPer = scifiValue / 100
+              thrillerPer = thrillerValue / 100
+          
+              smallestDistance = 100;
+                dict = {};
+
+                // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
+                for (var i=0;i<2167; i++) {
+                    var similarMovieTitle = data[i].title;
+                    var similarYear = data[i].year;
+                    var actionPer2 = data[i].actionPer;
+                    var comedyPer2 = data[i].comedyPer;
+                    var dramaPer2 = data[i].dramaPer;
+                    var fantasyPer2 = data[i].fantasyPer;
+                    var horrorPer2 = data[i].horrorPer;
+                    var scifiPer2 = data[i].scifiPer;
+                    var thrillerPer2 = data[i].thrillerPer;
+
+                    distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
+                    
+                    // Add movie info and similarity score to dictionary
+                    dict[similarMovieTitle + " (" + similarYear + ")"] = 100 - distance;
+                    
+                    //alert((100-distance).toString()+"% Match")
+                    };
+                
+                // sort dictionary by distance
+                // Create items array
+                var items = Object.keys(dict).map(function(key) {
+                return [key, dict[key]];
+                });
+
+                // Sort the array based on the second element
+                items.sort(function(first, second) {
+                return second[1] - first[1];
+                });
+
+                // Create a new array with only the first 5 items
+                mostSimilarMovies = items.slice(1, 6);
+                
+
+                if (Object.values(mostSimilarMovies)[0][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[1][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[2][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[3][0].length > 36){
+                    var fontSize = "16px"
+                }
+                else if (Object.values(mostSimilarMovies)[4][0].length > 36){
+                    var fontSize = "16px"
+                }
+                
+                var fontColor1 = "green";
+                var fontColor2 = "green";
+                var fontColor3 = "green";
+                var fontColor4 = "green";
+                var fontColor5 = "green";
+                
+                if (Object.values(mostSimilarMovies)[0][1].toFixed(0) < 0) {
+                    fontColor1 = "red"
+                }
+                if (Object.values(mostSimilarMovies)[1][1].toFixed(0) < 0) {
+                    fontColor2 = "red"
+                }
+                if (Object.values(mostSimilarMovies)[2][1].toFixed(0) < 0) {
+                    fontColor3 = "red"
+                }
+                if (Object.values(mostSimilarMovies)[3][1].toFixed(0) < 0) {
+                    fontColor4 = "red"
+                }
+                if (Object.values(mostSimilarMovies)[4][1].toFixed(0) < 0) {
+                    fontColor5 = "red"
+                }
+
+                mostSimilar1.text(Object.values(mostSimilarMovies)[0][0]).style("font-size", fontSize)
+                mostSimilar1Per.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "%").attr("fill",fontColor1)   
+                mostSimilar2.text(Object.values(mostSimilarMovies)[1][0]).style("font-size", fontSize)
+                mostSimilar2Per.text(Object.values(mostSimilarMovies)[1][1].toFixed(0) + "%").attr("fill",fontColor2)
+                mostSimilar3.text(Object.values(mostSimilarMovies)[2][0]).style("font-size", fontSize)
+                mostSimilar3Per.text(Object.values(mostSimilarMovies)[2][1].toFixed(0) + "%").attr("fill",fontColor3)
+                mostSimilar4.text(Object.values(mostSimilarMovies)[3][0]).style("font-size", fontSize)
+                mostSimilar4Per.text(Object.values(mostSimilarMovies)[3][1].toFixed(0) + "%").attr("fill",fontColor4)
+                mostSimilar5.text(Object.values(mostSimilarMovies)[4][0]).style("font-size", fontSize)
+                mostSimilar5Per.text(Object.values(mostSimilarMovies)[4][1].toFixed(0) + "%").attr("fill",fontColor5)
+            })
+        
+        }    
+        var svgForSimilarMovies = d3.select("body")
+            .append("svg")
+            .attr("width", 450)
+            .attr("height", 490)
+
+        //Create Title 
+        svgForSimilarMovies.append("text")
+            .attr("x", 250)
+            .attr("y", 25)
+            .attr('text-alignment','center')
+            .attr("font-size","23px")
+            .attr("font-weight","bold")
+            .style("text-anchor", "middle")
+            .text("Films With Similar Genre Scores");
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 75)
+            .attr("font-size","20px")
+            .text("1) ")
+
+        var mostSimilar1 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 75)
+            .attr("font-size","20px")
+            .text("Thor: Ragnarok (2017)")
+
+        var mostSimilar1Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 75)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("98%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 150)
+            .attr("font-size","20px")
+            .text("2) ")
+
+        var mostSimilar2 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 150)
+            .attr("font-size","20px")
+            .text("Justice League (2017)")
+
+        var mostSimilar2Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 150)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("98%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 225)
+            .attr("font-size","20px")
+            .text("3) ")
+
+        var mostSimilar3 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 225)
+            .attr("font-size","20px")
+            .text("Star Wars: The Last Jedi (2017)")
+
+        var mostSimilar3Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 225)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("97%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 300)
+            .attr("font-size","20px")
+            .text("4) ")
+
+        var mostSimilar4 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 300)
+            .attr("font-size","20px")
+            .text("Avengers: Age of Ultron (2015)")
+
+        var mostSimilar4Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 300)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("97%")
+
+        svgForSimilarMovies.append("text")
+            .attr("x", 30)
+            .attr("y", 375)
+            .attr("font-size","20px")
+            .text("5) ")
+
+        var mostSimilar5 = svgForSimilarMovies.append("text")
+            .attr("x", 52)
+            .attr("y", 375)
+            .attr("font-size","20px")
+            .text("Guardians of the Galaxy Vol. 2 (2017)")
+
+        var mostSimilar5Per = svgForSimilarMovies.append("text")
+            .attr("x", 408)
+            .attr("y", 375)
+            .attr("font-size","20px")
+            .attr("fill","green")
+            .text("96%")
+    </script>
+</div>
+<!-- ============================================== -->
+
+<!-- Figure 2 - The Most Representative Movies from Each Genre -->
+<div id = "mostGenreMovies">
+        <article>
+        <p>Finally, we can stack all 2,167 films against each other to see which movies dominate their genre. Here we can finally get a definitive definition for each category...or at least reveal which movies are the most defining for any particular genre. Remember,  
+                    This reveals which movies are the most defining of any genre of interest. As stated “most horror” should not be thought of as scariest, and “most comedy” not as funniest - just the best examples of what we usually see in that genre.</p>
+           <p class = "center">Click on any genre to view it's most defining films:</p>
+           <span id="actionFilms">Action</span>
+           <span id="sciFiFilms">Sci-Fi</span>
+           <span id="horrorFilms">Horror</span>
+           <p></p>
+           <span id="comedyFilms">Comedy</span>
+           <span id="dramaFilms">Drama</span>
+           <span id="fantasyFilms">Fantasy</span>
+           <span id="thrillerFilms">Thriller</span>
+   
+       </article>
+   
+       <script>
+   
+               d3.select("#mostGenreMovies").selectAll("span")
+                   .on("click", function() {
+   
+                       //See which p was clicked
+                       var spanID = d3.select(this).attr("id");
+                      
+                       if (spanID == "actionFilms") {
+                           //New values for dataset
+                           newData = [1.138,1.092,1.05,1.048,1.046,1.043,1.023,1.012,1.006,1.002];
+                           newLabels = ["Broken Arrow (1996)", "RED 2 (2013)", "Rambo: First Blood Part II (1985)", "Under Siege (1992)", "Rambo III (1988)", "The Chronicles of Riddick (2004)", "Die Another Day (2002)", "The Expendables 2	(2012)", "xXx: State of the Union (2005)", "Behind Enemy Lines (2001)" ];
+                           genreLabel = "Action";
+                       }
+   
+                       else if (spanID == "sciFiFilms") {
+                           //New values for dataset
+                           newData = [1.532,1.318,1.296,1.241,1.196,1.183,1.173,1.163,1.128,1.109];
+                           newLabels = ["Red Planet (2000)", "Star Trek: The Motion Picture (1979)", "Star Trek: Insurrection (1998)", "Star Trek V: The Final Frontier (1989)", "Final Fantasy: The Spirits Within (2001)", "Star Trek: Generations (1994)", "Stargate (1994)", "Star Trek: First Contact (1996)", "Alien³ (1992)", "Sunshine (2007)"];
+                           genreLabel = "Sci-Fi";
+                       }
+   
+                       else if (spanID == "horrorFilms") {
+                           //New values for dataset
+                           newData = [1.605,1.596,1.530,1.391,1.387,1.361,1.345,1.319,1.287,1.246];
+                           newLabels = labels;
+                           genreLabel = "Horror";
+                       }
+   
+                       else if (spanID == "comedyFilms") {
+                           //New values for dataset
+                           newData = [.845,.777,.724,.704,.698,.694,.661,.654,.642,.633];
+                           newLabels = ["The Edge of Seventeen (2016)", "Tenacious D in The Pick of Destiny (2006)", "Hall Pass (2011)", "American Reunion	(2012)", "Sex Drive	(2008)", "American Pie 2 (2001)", "Good Luck Chuck (2007)", "The Heartbreak Kid	(2007)", "Turbo	(2013)", "Music and Lyrics (2007)"];
+                           genreLabel = "Comedy";
+                       }
+   
+                       else if (spanID == "dramaFilms") {
+                           //New values for dataset
+                           newData = [.957,.924,.762,.740,.698,.695,.694,.681,.671,.668];
+                           newLabels = ["Men of Honor (2000)", "The Big Sick (2017)", "Marley & Me (2008)", "12 Years a Slave (2013)", "The Graduate (1967)", "The Pursuit of Happyness (2006)", "Hidden Figures (2016)", "Bohemian Rhapsody (2018)", "Walk the Line (2005)", "Julie & Julia (2009)"];
+                           genreLabel = "Drama";
+                       }
+   
+                       else if (spanID == "fantasyFilms") {
+                           //New values for dataset
+                           newData = [1.288,1.191,1.187,1.124,1.062,1.032,1.002,.941,.931,.920];
+                           newLabels = ["Shrek Forever After (2010)", "The Sword in the Stone (1963)", "Maleficent (2014)", "Sleeping Beauty (1959)", "Frozen (2013)", "Kubo and the Two Strings (2016)", "Night at the Museum: Secret of the Tomb (2014)", "Snow White and the Huntsman (2012)", "Legend (1985)", "Cinderella (1950)"];
+                           genreLabel = "Fantasy";
+                       }
+   
+                       else if (spanID == "thrillerFilms") {
+                           //New values for dataset
+                           newData = [.664,.631,.621,.608,.594,.594,.593,.578,.574,.573];
+                           newLabels = ["Assault on Precinct 13 (2005)", "Unthinkable (2010)", "RED 2 (2013)", "Snake Eyes (1998)", "Fargo (1996)", "The Negotiator (1998)", "Safe House (2012)", "Mississippi Burning (1988)", "Taxi Driver (1976)", "Edge of Darkness (2010)"];
+                           genreLabel = "Thriller";
+                       }
+                       
+   
+                       fig1Label.text('The "Most ' + genreLabel + '" Films');
+   
+                       xScale = d3.scaleLinear()
+                                   .domain([0, d3.max(newData, function(d) { return d; })])
+                                   .range([0, w]);
+   
+                       //Update all labels
+                       svg.selectAll("text")
+                          .data(newLabels)
+                          .transition()
+                          .text(function(d) {
+                                  return d;
+                          })
+                          .attr("x", 5)
+                          .attr("y", function(d, i) {
+                                  return i * (h / newLabels.length) + (h / newLabels.length / 2);
+                          })
+                          .attr("font-family", "sans-serif")
+                          .attr("font-size", "18px")
+                          .attr("fill", "white")
+                          .style("dominant-baseline", "middle");
+   
+                       //Update all rects
+                       svg.selectAll("rect")
+                           .data(newData)
+                           .transition()
+                           .attr("y", function(d, i) {
+                                      return i * (h / newData.length);
+                              })
+                              .attr("x", 0)
+                              .attr("height", h / newData.length)
+                              .attr("width", function(d) {
+                                      return xScale(d);
+                              })
+                              .attr("fill", function(d) {
+                                   return "rgb(0, 0, " + Math.round(d * 255) + ")";
+                              })
+                              .select("title")
+                              .text(function(d) {
+                                      return genreLabel + " Level: " + d;
+                              });
+                       });
+   
+   
+   
+   
+       </script>
+   
+       <script>
+   
+           var fig1Label = d3.select("body").append("h2")
+   
+           fig1Label.text('The "Most Horror" Films');
+   
+           //Width and height
+           var h = 400;
+           var w = 500;
+           var barPadding = 1;
+   
+           var dataset = [1.605,1.596,1.530,1.391,1.387,1.361,1.345,1.319,1.287,1.246];
+   
+           var xScale = d3.scaleLinear()
+               .domain([0, d3.max(dataset, function(d) { return d; })])
+               .range([0, w]);
+               
+               //Create SVG element
+           var svg = d3.select("body")
+               .append("svg")
+               .attr("width", w)
+               .attr("height", h);
+   
+           svg.selectAll("rect")
+               .data(dataset)
+               .enter()
+               .append("rect")
+               .attr("y", function(d, i) {
+                          return i * (h / dataset.length);
+                  })
+                  .attr("x", 0)
+                  .attr("height", h / dataset.length)
+                  .attr("width", function(d) {
+                          return xScale(d);
+                  })
+                  .attr("fill", function(d) {
+                       return "rgb(0, 0, " + Math.round(d * 255) + ")";
+                  })
+                  .append("title")
+                  .text(function(d) {
+                          return "Horror Level: " + d;
+                  });
+   
+               var labels = ["Se7en (1995)", "Final Destination 5 (2011)", "Halloween H20: 20 Years Later (1998)", "Saw VI	(2009)", "The Nun (2018)", "Friday the 13th	(2009)", "Annabelle: Creation (2017)", "The Evil Dead (1981)", "The Hills Have Eyes II (2007)", "Paranormal Activity 4 (2012)"];
+   
+               svg.selectAll("text")
+                  .data(labels)
+                  .enter()
+                  .append("text")
+                  .text(function(d) {
+                          return d;
+                  })
+                  .attr("x", 5)
+                  .attr("y", function(d, i) {
+                          return i * (h / dataset.length) + (h / dataset.length / 2);
+                  })
+                  .attr("font-family", "sans-serif")
+                  .attr("font-size", "18px")
+                  .attr("fill", "white")
+                  .style("dominant-baseline", "middle")
+                  .append("title")
+                  .text(function(d, i) {
+                          return "Horror Level: " + dataset[i] + " / 1";
+                  });
+   
+       </script>
+   </div>
+   <!-- ----------------------------------------------- -->
+   
+<!-- Methodology section - Random Word Button & Corresponding Relative Usage Values Figure -->
 
 	<article>
-		<p>Conclusion</p>
-	</article>
+        <h2>Methodology</h2>
+    </article>
+    
+<div id = "randomWordDiv">
+ 
+    <span id="randomWord">Random Word</span>
+    
+    <script>
+       
+        var wordLabel = d3.select("body").append("h2").text("");
+
+        //Width and height
+        var w2 = 750;
+        var h2 = 150;
+        var labelHeight = 50
+        var barPadding = 1;
+
+        // starter data
+        var wordValuesData = [0,0,0,0,0,0,0];
+
+        //Create SVG element
+        var svg2 = d3.select("body")
+            .append("svg")
+            .attr("width", w2)
+            .attr("height", h2);
+
+        var xScale = d3.scaleBand()
+            .domain(d3.range(wordValuesData.length))
+            .rangeRound([0, w2])
+            .paddingInner(0.05);
+
+        var yScale = d3.scaleLinear()
+            .domain([0, d3.max(wordValuesData)])
+            .range([0, h2]);
+
+        //Create bars
+        svg2.selectAll("rect")
+           .data(wordValuesData)
+           .enter()
+           .append("rect")
+           .attr("x", function(d, i) {
+                   return xScale(i);
+           })
+           .attr("y", function(d) {
+                   return h2 - yScale(d);
+           })
+           .attr("width", xScale.bandwidth())
+           .attr("height", function(d) {
+                   return yScale(d);
+           })
+           .attr("fill", function(d) {
+                return "rgb(100, 100, " + Math.round(d * 100) + ")";
+           });
+
+           svg2.selectAll("text")
+           .data(wordValuesData)
+           .enter()
+           .append("text")
+           .text(function(d) {
+                   return d;
+           })
+           .attr("x", function(d, i) {
+                   return i * (w2 / wordValuesData.length) + 5;
+           })
+           .attr("y", function(d) {
+                   return yScale(d) + 15;
+           })
+           .attr("font-family", "sans-serif")
+           .attr("font-size", "20px")
+           .attr("fill", "white");
+
+           var svgForLabels = d3.select("body")
+                    .append("svg")
+                    .attr("width", w2)
+                    .attr("height", labelHeight);
+
+            d3.select("#randomWordDiv").selectAll("span").on("click", function() {
+
+
+                        dataset = d3.csv("wordsDataJan.csv", function(data) {
+                            randomNum = Math.floor((Math.random() * 1077) + 1);
+
+                            wordValue = data[randomNum].word;
+                            actionValue = data[randomNum].actionRelativeUsage;
+                            comedyValue = data[randomNum].comedyRelativeUsage;
+                            dramaValue = data[randomNum].dramaRelativeUsage;
+                            fantasyValue = data[randomNum].fantasyRelativeUsage;
+                            horrorValue = data[randomNum].horrorRelativeUsage;
+                            scifiValue = data[randomNum].scifiRelativeUsage;
+                            thrillerValue = data[randomNum].thrillerRelativeUsage;
+
+                            wordLabel.text("Relative Usage of '"+wordValue+"' Tag In Each Genre");
+                        
+
+                            wordValuesData = [parseFloat(actionValue),parseFloat(comedyValue),parseFloat(dramaValue),
+                                                parseFloat(fantasyValue),parseFloat(horrorValue),
+                                                parseFloat(scifiValue),parseFloat(thrillerValue)];
+                            
+                            yScale = d3.scaleLinear()
+                                .domain([0, d3.max(wordValuesData)])
+                                .range([0, h2/1.16]);
+
+                            svg2.selectAll("rect")
+                            .data(wordValuesData)
+                            .transition()
+                            .attr("x", function(d, i) {
+                                    return i * (w2 / wordValuesData.length);
+                            })
+                            .attr("y", function(d) {
+                                    return h2 - yScale(d);
+                            })
+                            .attr("width", w2 / wordValuesData.length - barPadding)
+                            .attr("height", function(d) {
+                                    return yScale(d);
+                            })
+                            .attr("fill", function(d) {
+                                    return "rgb(0, 0, " + Math.round(d * 100) + ")";
+                            });
+
+                        
+                            svg2.selectAll("text")
+                            .data(wordValuesData)
+                            .transition(2000)
+                            .text(function(d) {
+                                    return d.toFixed(2) + "x";
+                            })
+                            .attr("x", function(d, i) {
+                                    return i * (w2 / wordValuesData.length) + (w2 / wordValuesData.length / 2);
+                            })
+                            .attr("y", function(d) {
+                                    return h2 - yScale(d) - 5;
+                            })
+                            .attr("font-family", "sans-serif")
+                            .attr("font-size", "20px")
+                            .attr("text-anchor", "middle")
+                            .attr("text-align","center")
+                            .attr("font-weight","bold")
+                            .attr("fill", function(d) {
+                                    return "rgb(0, 0, " + Math.round(d * 100) + ")";
+                            });
+                        
+                            var graphLabels = ["Action", "Comedy", "Drama", "Fantasy", "Horror", "Sci-Fi", "Thriller"];
+                            
+                            //Add the SVG Text Element to the svgContainer
+                            var text = svgForLabels.selectAll("text")
+                                                    .data(graphLabels)
+                                                    .enter()
+                                                    .append("text");
+
+                            //Add SVG Text Element Attributes
+                            var textLabels = text
+                                            .attr("x", function(d,i){return (i*(w2 / graphLabels.length)+(w2/graphLabels.length/2))})
+                                            .attr("y", 15)
+                                            .text(function(d){return (d)})
+                                            .attr("font-family", "sans-serif")
+                                            .attr("font-size", "16px")
+                                            .attr("fill", "black")
+                                            .attr("font-weight","bold")
+                                            .attr("text-anchor", "middle");
+
+                        })
+                        });
+    </script>
+    </div>
+<!-- ----------------------------------------------- -->
+
+
   </body>
 </html>
