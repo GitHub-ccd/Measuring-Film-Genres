@@ -1575,7 +1575,7 @@
             d3.select("#randomWordDiv").selectAll("span").on("click", function() {
 
 
-                        dataset = d3.csv("https://github.com/OGladfelter/test/blob/gh-pages/wordsDataJan.csv", function(data) {
+                        dataset = d3.csv("wordsDataJan.csv", function(data) {
                             randomNum = Math.floor((Math.random() * 1077) + 1);
 
                             wordValue = data[randomNum].word;
