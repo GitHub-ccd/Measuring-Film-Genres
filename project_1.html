@@ -189,7 +189,18 @@
     <article>
     	<p>Ultimately, <em>Avengers: Infinity War</em> is much more sci-fi than it is fantasy. It’s also more action than anything. Having settled that debate, I went on to apply my methodology (which you can read more about below) to a total of 2,167 films. You can search for some of your favorite films below to see their genre breakdowns, or you can click on “Random Movie” if you’re not sure where to start. For each film, I’ll also show you others that have similar genre percentages.</p>
     </article>
+	  
+<!-- Load in movie data -->    
+<script>
+    movieDataSet = []
 
+    d3.csv("moviesDataJan.csv", function(data){
+        movieDataSet.push(data);
+    })
+
+</script>
+<!-- ============================== -->
+	  
 <!-- BEGIN interactive searching section -->
 <div id = "dynamicRadarSection">
 
@@ -280,19 +291,18 @@
 
                 /* Update the radar chart with new movie */
 
-                dataset = d3.csv("moviesDataJan.csv", function(data) {
-      for (var i=0;i<2167; i++) {
-          if (data[i].title + " ("+data[i].year+")" == document.getElementById("myInput").value) {
+                for (var i=0;i<movieDataSet; i++) {
+          if (movieDataSet[i].title + " ("+movieDataSet[i].year+")" == document.getElementById("myInput").value) {
               
-              movieTitle = data[i].title;
-              movieYear = data[i].year;
-              actionPer = data[i].actionPer;
-              comedyPer = data[i].comedyPer;
-              dramaPer = data[i].dramaPer;
-              fantasyPer = data[i].fantasyPer;
-              horrorPer = data[i].horrorPer;
-              scifiPer = data[i].scifiPer;
-              thrillerPer = data[i].thrillerPer;
+              movieTitle = movieDataSet[i].title;
+              movieYear = movieDataSet[i].year;
+              actionPer = movieDataSet[i].actionPer;
+              comedyPer = movieDataSet[i].comedyPer;
+              dramaPer = movieDataSet[i].dramaPer;
+              fantasyPer = movieDataSet[i].fantasyPer;
+              horrorPer = movieDataSet[i].horrorPer;
+              scifiPer = movieDataSet[i].scifiPer;
+              thrillerPer = movieDataSet[i].thrillerPer;
 
 
               smallestDistance = 100;
@@ -300,15 +310,15 @@
 
                 // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
                 for (var i=0;i<2167; i++) {
-                    var similarMovieTitle = data[i].title;
-                    var similarYear = data[i].year;
-                    var actionPer2 = data[i].actionPer;
-                    var comedyPer2 = data[i].comedyPer;
-                    var dramaPer2 = data[i].dramaPer;
-                    var fantasyPer2 = data[i].fantasyPer;
-                    var horrorPer2 = data[i].horrorPer;
-                    var scifiPer2 = data[i].scifiPer;
-                    var thrillerPer2 = data[i].thrillerPer;
+                    var similarMovieTitle = movieDataSet[i].title;
+                    var similarYear = movieDataSet[i].year;
+                    var actionPer2 = movieDataSet[i].actionPer;
+                    var comedyPer2 = movieDataSet[i].comedyPer;
+                    var dramaPer2 = movieDataSet[i].dramaPer;
+                    var fantasyPer2 = movieDataSet[i].fantasyPer;
+                    var horrorPer2 = movieDataSet[i].horrorPer;
+                    var scifiPer2 = movieDataSet[i].scifiPer;
+                    var thrillerPer2 = movieDataSet[i].thrillerPer;
 
                     distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
                     
