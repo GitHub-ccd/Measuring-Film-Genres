@@ -200,7 +200,7 @@
 
     d3.csv("moviesDataJan.csv", function(data){
         movieDataSet.push(data);
-        movies.push(data.title)
+        movies.push(data.title + " ("+data.year+")")
     })
 
 </script>
