@@ -495,15 +495,6 @@
     });
   }
   
-  /*An array to be filled with all the movie titles in the dataset*/
-  var movies = []
-  
-  dataset = d3.csv("moviesDataJan.csv", function(d) {
-      for (var i=0;i<2167; i++) {
-      movies.push(d[i].title + " ("+d[i].year+")")
-    };
-  })
-  
   /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
   autocomplete(document.getElementById("myInput"), movies);
   
