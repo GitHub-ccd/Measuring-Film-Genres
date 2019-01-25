@@ -506,33 +506,33 @@
   
       if (spanID == "randomMovieSearch") {
   
-          dataset = d3.csv("moviesDataJan.csv", function(data) {
+          
               randomNum = Math.floor((Math.random() * 2167) + 1);
   
-              movieTitle = data[randomNum].title;
-              movieYear = data[randomNum].year;
-              actionPer = data[randomNum].actionPer;
-              comedyPer = data[randomNum].comedyPer;
-              dramaPer = data[randomNum].dramaPer;
-              fantasyPer = data[randomNum].fantasyPer;
-              horrorPer = data[randomNum].horrorPer;
-              scifiPer = data[randomNum].scifiPer;
-              thrillerPer = data[randomNum].thrillerPer;
+              movieTitle = movieDataSet[randomNum].title;
+              movieYear = movieDataSet[randomNum].year;
+              actionPer = movieDataSet[randomNum].actionPer;
+              comedyPer = movieDataSet[randomNum].comedyPer;
+              dramaPer = movieDataSet[randomNum].dramaPer;
+              fantasyPer = movieDataSet[randomNum].fantasyPer;
+              horrorPer = movieDataSet[randomNum].horrorPer;
+              scifiPer = movieDataSet[randomNum].scifiPer;
+              thrillerPer = movieDataSet[randomNum].thrillerPer;
           
               smallestDistance = 100;
                 dict = {};
 
                 // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
                 for (var i=0;i<2167; i++) {
-                    var similarMovieTitle = data[i].title;
-                    var similarYear = data[i].year;
-                    var actionPer2 = data[i].actionPer;
-                    var comedyPer2 = data[i].comedyPer;
-                    var dramaPer2 = data[i].dramaPer;
-                    var fantasyPer2 = data[i].fantasyPer;
-                    var horrorPer2 = data[i].horrorPer;
-                    var scifiPer2 = data[i].scifiPer;
-                    var thrillerPer2 = data[i].thrillerPer;
+                    var similarMovieTitle = movieDataSet[i].title;
+                    var similarYear = movieDataSet[i].year;
+                    var actionPer2 = movieDataSet[i].actionPer;
+                    var comedyPer2 = movieDataSet[i].comedyPer;
+                    var dramaPer2 = movieDataSet[i].dramaPer;
+                    var fantasyPer2 = movieDataSet[i].fantasyPer;
+                    var horrorPer2 = movieDataSet[i].horrorPer;
+                    var scifiPer2 = movieDataSet[i].scifiPer;
+                    var thrillerPer2 = movieDataSet[i].thrillerPer;
 
                     distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
                     
@@ -632,7 +632,7 @@
   
       // Draw the chart, get a reference the created svg element :
       let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions);
-          })
+          
       }
       })
   </script>
