@@ -192,10 +192,15 @@
 	  
 <!-- Load in movie data -->    
 <script>
+    // this will hold movie data
     movieDataSet = []
+
+    //An array to be filled with all the movie titles in the dataset - for the autofill
+    movies = []
 
     d3.csv("moviesDataJan.csv", function(data){
         movieDataSet.push(data);
+        movies.push(data.title)
     })
 
 </script>
