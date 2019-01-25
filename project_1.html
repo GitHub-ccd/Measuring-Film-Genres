@@ -1582,14 +1582,14 @@
 
                             randomNum = Math.floor((Math.random() * 1077) + 1);
 
-                            wordValue = wordDataSet[0][randomNum].word;
-                            actionValue = wordDataSet[0][randomNum].actionRelativeUsage;
-                            comedyValue = wordDataSet[0][randomNum].comedyRelativeUsage;
-                            dramaValue = wordDataSet[0][randomNum].dramaRelativeUsage;
-                            fantasyValue = wordDataSet[0][randomNum].fantasyRelativeUsage;
-                            horrorValue = wordDataSet[0][randomNum].horrorRelativeUsage;
-                            scifiValue = wordDataSet[0][randomNum].scifiRelativeUsage;
-                            thrillerValue = wordDataSet[0][randomNum].thrillerRelativeUsage;
+                            wordValue = wordDataSet[randomNum].word;
+                            actionValue = wordDataSet[randomNum].actionRelativeUsage;
+                            comedyValue = wordDataSet[randomNum].comedyRelativeUsage;
+                            dramaValue = wordDataSet[randomNum].dramaRelativeUsage;
+                            fantasyValue = wordDataSet[randomNum].fantasyRelativeUsage;
+                            horrorValue = wordDataSet[randomNum].horrorRelativeUsage;
+                            scifiValue = wordDataSet[randomNum].scifiRelativeUsage;
+                            thrillerValue = wordDataSet[randomNum].thrillerRelativeUsage;
 
                             wordLabel.text("Relative Usage of '"+wordValue+"' Tag In Each Genre");
                         
