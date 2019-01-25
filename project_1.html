@@ -1572,20 +1572,24 @@
                     .attr("width", w2)
                     .attr("height", labelHeight);
 
+            wordDataSet = []
+
+            d3.csv("wordsDataJan.csv", function(data){
+                wordDataSet.push(data);
+            })
+
             d3.select("#randomWordDiv").selectAll("span").on("click", function() {
 
-
-                        dataset = d3.csv("wordsDataJan.csv", function(data) {
                             randomNum = Math.floor((Math.random() * 1077) + 1);
 
-                            wordValue = data[randomNum].word;
-                            actionValue = data[randomNum].actionRelativeUsage;
-                            comedyValue = data[randomNum].comedyRelativeUsage;
-                            dramaValue = data[randomNum].dramaRelativeUsage;
-                            fantasyValue = data[randomNum].fantasyRelativeUsage;
-                            horrorValue = data[randomNum].horrorRelativeUsage;
-                            scifiValue = data[randomNum].scifiRelativeUsage;
-                            thrillerValue = data[randomNum].thrillerRelativeUsage;
+                            wordValue = wordDataSet[0][randomNum].word;
+                            actionValue = wordDataSet[0][randomNum].actionRelativeUsage;
+                            comedyValue = wordDataSet[0][randomNum].comedyRelativeUsage;
+                            dramaValue = wordDataSet[0][randomNum].dramaRelativeUsage;
+                            fantasyValue = wordDataSet[0][randomNum].fantasyRelativeUsage;
+                            horrorValue = wordDataSet[0][randomNum].horrorRelativeUsage;
+                            scifiValue = wordDataSet[0][randomNum].scifiRelativeUsage;
+                            thrillerValue = wordDataSet[0][randomNum].thrillerRelativeUsage;
 
                             wordLabel.text("Relative Usage of '"+wordValue+"' Tag In Each Genre");
                         
@@ -1655,8 +1659,6 @@
                                             .attr("fill", "black")
                                             .attr("font-weight","bold")
                                             .attr("text-anchor", "middle");
-
-                        })
                         });
     </script>
     </div>
