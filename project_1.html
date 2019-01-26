@@ -372,7 +372,7 @@
                 }
                 
                 mostSimilar1.text(Object.values(mostSimilarMovies)[0][0]).style("font-size", fontSize)
-                mostSimilar1Per.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "%")   
+                mostSimilar1Per.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "% Match")   
                 mostSimilar2.text(Object.values(mostSimilarMovies)[1][0]).style("font-size", fontSize)
                 mostSimilar2Per.text(Object.values(mostSimilarMovies)[1][1].toFixed(0) + "%")
                 mostSimilar3.text(Object.values(mostSimilarMovies)[2][0]).style("font-size", fontSize)
@@ -612,7 +612,7 @@
                 }
                 
                 mostSimilar1.text(Object.values(mostSimilarMovies)[0][0]).style("font-size", fontSize)
-                mostSimilar1Per.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "%")   
+                mostSimilar1Per.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "% Match")   
                 mostSimilar2.text(Object.values(mostSimilarMovies)[1][0]).style("font-size", fontSize)
                 mostSimilar2Per.text(Object.values(mostSimilarMovies)[1][1].toFixed(0) + "%")
                 mostSimilar3.text(Object.values(mostSimilarMovies)[2][0]).style("font-size", fontSize)
@@ -707,7 +707,7 @@
     <script>
         var svgForSimilarMovies = d3.select("#dynamicRadarSection")
             .append("svg")
-            .attr("width", 450)
+            .attr("width", 500)
             .attr("height", 450)
         
         //Create Title 
@@ -737,7 +737,7 @@
             .attr("y", 75)
             .attr("font-size","20px")
             .attr("fill","green")
-            .text("98%")
+            .text("98% Match")
 
         svgForSimilarMovies.append("text")
             .attr("x", 30)
@@ -1254,7 +1254,7 @@
                 }
 
                 mostSimilar1_2.text(Object.values(mostSimilarMovies)[0][0]).style("font-size", fontSize)
-                mostSimilar1Per_2.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "%").attr("fill",fontColor1)   
+                mostSimilar1Per_2.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "% Match").attr("fill",fontColor1)   
                 mostSimilar2_2.text(Object.values(mostSimilarMovies)[1][0]).style("font-size", fontSize)
                 mostSimilar2Per_2.text(Object.values(mostSimilarMovies)[1][1].toFixed(0) + "%").attr("fill",fontColor2)
                 mostSimilar3_2.text(Object.values(mostSimilarMovies)[2][0]).style("font-size", fontSize)
@@ -1268,7 +1268,7 @@
         }    
         var svgForSimilarMovies_2 = d3.select("body")
             .append("svg")
-            .attr("width", 450)
+            .attr("width", 500)
             .attr("height", 490)
 
         //Create Title 
@@ -1291,14 +1291,14 @@
             .attr("x", 52)
             .attr("y", 75)
             .attr("font-size","20px")
-            .text("Thor: Ragnarok (2017)")
+            .text("Airplane! (1980)")
 
         var mostSimilar1Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 75)
             .attr("font-size","20px")
             .attr("fill","green")
-            .text("98%")
+            .text("62% Match")
 
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
@@ -1310,14 +1310,14 @@
             .attr("x", 52)
             .attr("y", 150)
             .attr("font-size","20px")
-            .text("Justice League (2017)")
+            .text("The Time Traveler's Wife (2009)")
 
         var mostSimilar2Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 150)
             .attr("font-size","20px")
             .attr("fill","green")
-            .text("98%")
+            .text("62%")
 
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
@@ -1329,14 +1329,14 @@
             .attr("x", 52)
             .attr("y", 225)
             .attr("font-size","20px")
-            .text("Star Wars: The Last Jedi (2017)")
+            .text("Dude, Where's My Car? (2000)")
 
         var mostSimilar3Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 225)
             .attr("font-size","20px")
             .attr("fill","green")
-            .text("97%")
+            .text("62%")
 
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
@@ -1348,14 +1348,14 @@
             .attr("x", 52)
             .attr("y", 300)
             .attr("font-size","20px")
-            .text("Avengers: Age of Ultron (2015)")
+            .text("Alvin and the Chipmunks (2007)")
 
         var mostSimilar4Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 300)
             .attr("font-size","20px")
             .attr("fill","green")
-            .text("97%")
+            .text("61%")
 
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
@@ -1367,14 +1367,14 @@
             .attr("x", 52)
             .attr("y", 375)
             .attr("font-size","20px")
-            .text("Guardians of the Galaxy Vol. 2 (2017)")
+            .text("Splash (1984)")
 
         var mostSimilar5Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 375)
             .attr("font-size","20px")
             .attr("fill","green")
-            .text("96%")
+            .text("61%")
     </script>
 </div>
 <!-- ============================================== -->
