@@ -632,7 +632,14 @@
   
       // Draw the chart, get a reference the created svg element :
       let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions);
-          
+	      
+      actionSlider.value(actionPer);
+      comedySlider.value(comedyPer);
+      dramaSlider.value(dramaPer);
+      fantasySlider.value(fantasyPer);
+      horrorSlider.value(horrorPer);
+      scifiSlider.value(scifiPer);
+      thrillerSlider.value(thrillerPer);
       }
       })
   </script>
@@ -800,7 +807,7 @@
                     .width(200)
                     .tickFormat(d3.format('.0%'))
                     .ticks(5)
-                    .default(.36)
+                    .default(0)
                     .fill('blue')
                     .handle(
                       d3
@@ -809,16 +816,17 @@
                         .size(200)()
                     )
                     .on('onchange', val => {
-                      actionSliderLabel.text("Action: " + d3.format('.0%')(val));
-                      actionValue = (val*100).toFixed(0)
-                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
-                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
-                        SliderPersTotal.style("fill","red")
-                      }
-                      else{
-                        SliderPersTotal.style("fill","black") 
-                      }
-                      updateFromCustomPers()
+                        actionValue = val
+                        var total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        if (total > 1) {
+                            val = 1 - total + val
+                            actionSlider.silentValue(val)
+                            actionValue = val
+                            total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        }
+                        actionSliderLabel.text("Action: " + d3.format('.0%')(val));
+                        SliderPersTotal.text("Total: " + (total*100).toFixed(0) + "%")
+                        updateFromCustomPers()
                     });
                 
                   svgActionSlider = sliderSvg.append("svg")
@@ -852,16 +860,17 @@
                         .size(200)()
                     )
                     .on('onchange', val => {
-                      comedySliderLabel.text("Comedy: " + d3.format('.0%')(val));
-                      comedyValue = (val*100).toFixed(0)
-                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
-                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
-                        SliderPersTotal.style("fill","red")
-                      }
-                      else{
-                        SliderPersTotal.style("fill","black") 
-                      }
-                      updateFromCustomPers()
+                        comedyValue = val
+                        var total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        if (total > 1) {
+                            val = 1 - total + val
+                            comedySlider.silentValue(val)
+                            comedyValue = val
+                            total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        }
+                        comedySliderLabel.text("Comedy: " + d3.format('.0%')(val));
+                        SliderPersTotal.text("Total: " + (total*100).toFixed(0) + "%")
+                        updateFromCustomPers()
                     });
                 
                   svgComedySlider = sliderSvg.append("svg")
@@ -895,16 +904,17 @@
                         .size(200)()
                     )
                     .on('onchange', val => {
-                      dramaSliderLabel.text("Drama: " + d3.format('.0%')(val));
-                      dramaValue = (val*100).toFixed(0)
-                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
-                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
-                        SliderPersTotal.style("fill","red")
-                      }
-                      else{
-                        SliderPersTotal.style("fill","black") 
-                      }
-                      updateFromCustomPers()
+                        dramaValue = val
+                        var total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        if (total > 1) {
+                            val = 1 - total + val
+                            dramaSlider.silentValue(val)
+                            dramaValue = val
+                            total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        }
+                        dramaSliderLabel.text("Drama: " + d3.format('.0%')(val));
+                        SliderPersTotal.text("Total: " + (total*100).toFixed(0) + "%")
+                        updateFromCustomPers()
                     });
                 
                   svgDramaSlider = sliderSvg.append("svg")
@@ -938,16 +948,17 @@
                         .size(200)()
                     )
                     .on('onchange', val => {
-                      fantasySliderLabel.text("Fantasy: " + d3.format('.0%')(val));
-                      fantasyValue = (val*100).toFixed(0)
-                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
-                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
-                        SliderPersTotal.style("fill","red")
-                      }
-                      else{
-                        SliderPersTotal.style("fill","black") 
-                      }
-                      updateFromCustomPers()
+                        fantasyValue = val
+                        var total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        if (total > 1) {
+                            val = 1 - total + val
+                            fantasySlider.silentValue(val)
+                            fantasyValue = val
+                            total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        }
+                        fantasySliderLabel.text("Fantasy: " + d3.format('.0%')(val));
+                        SliderPersTotal.text("Total: " + (total*100).toFixed(0) + "%")
+                        updateFromCustomPers()
                     });
                 
                   svgFantasySlider = sliderSvg.append("svg")
@@ -981,16 +992,17 @@
                         .size(200)()
                     )
                     .on('onchange', val => {
-                      horrorSliderLabel.text("Horror: " + d3.format('.0%')(val));
-                      horrorValue = (val*100).toFixed(0)
-                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
-                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
-                        SliderPersTotal.style("fill","red")
-                      }
-                      else{
-                        SliderPersTotal.style("fill","black") 
-                      }
-                      updateFromCustomPers()
+                        horrorValue = val
+                        var total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        if (total > 1) {
+                            val = 1 - total + val
+                            horrorSlider.silentValue(val)
+                            horrorValue = val
+                            total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        }
+                        horrorSliderLabel.text("Horror: " + d3.format('.0%')(val));
+                        SliderPersTotal.text("Total: " + (total*100).toFixed(0) + "%")
+                        updateFromCustomPers()
                     });
                 
                   svgHorrorSlider = sliderSvg.append("svg")
@@ -1024,16 +1036,17 @@
                         .size(200)()
                     )
                     .on('onchange', val => {
-                      scifiSliderLabel.text("Sci-Fi: " + d3.format('.0%')(val));
-                      scifiValue = (val*100).toFixed(0)
-                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
-                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
-                        SliderPersTotal.style("fill","red")
-                      }
-                      else{
-                        SliderPersTotal.style("fill","black") 
-                      }
-                      updateFromCustomPers()
+                        scifiValue = val
+                        var total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        if (total > 1) {
+                            val = 1 - total + val
+                            scifiSlider.silentValue(val)
+                            scifiValue = val
+                            total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        }
+                        scifiSliderLabel.text("Sci-Fi: " + d3.format('.0%')(val));
+                        SliderPersTotal.text("Total: " + (total*100).toFixed(0) + "%")
+                        updateFromCustomPers()
                     });
                 
                   svgScifiSlider = sliderSvg.append("svg")
@@ -1067,16 +1080,17 @@
                         .size(200)()
                     )
                     .on('onchange', val => {
-                      thrillerSliderLabel.text("Thriller: " + d3.format('.0%')(val));
-                      thrillerValue = (val*100).toFixed(0)
-                      SliderPersTotal.text("Total: " + (parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) + "%")
-                      if ((parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)) > 100){
-                        SliderPersTotal.style("fill","red")
-                      }
-                      else{
-                        SliderPersTotal.style("fill","black") 
-                      }
-                      updateFromCustomPers()
+                        thrillerValue = val
+                        var total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        if (total > 1) {
+                            val = 1 - total + val
+                            thrillerSlider.silentValue(val)
+                            thrillerValue = val
+                            total = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+                        }
+                        thrillerSliderLabel.text("Thriller: " + d3.format('.0%')(val));
+                        SliderPersTotal.text("Total: " + (total*100).toFixed(0) + "%")
+                        updateFromCustomPers()
                     });
                 
                   svgThrillerSlider = sliderSvg.append("svg")
@@ -1095,13 +1109,13 @@
 
     // Add and Update similar List
   function updateFromCustomPers(){
-              actionPer = actionValue / 100
-              comedyPer = comedyValue / 100
-              dramaPer = dramaValue / 100
-              fantasyPer = fantasyValue / 100
-              horrorPer = horrorValue / 100
-              scifiPer = scifiValue / 100
-              thrillerPer = thrillerValue / 100
+              actionPer = actionValue;
+              comedyPer = comedyValue;
+              dramaPer = dramaValue;
+              fantasyPer = fantasyValue;
+              horrorPer = horrorValue;
+              scifiPer = scifiValue;
+              thrillerPer = thrillerValue;
           
               smallestDistance = 100;
                 dict = {};
