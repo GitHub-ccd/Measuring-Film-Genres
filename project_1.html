@@ -424,6 +424,36 @@
   
       // Draw the chart, get a reference the created svg element :
       let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions);
+		  
+	// Update sliders below
+      actionSlider.silentValue(actionPer);
+      comedySlider.silentValue(comedyPer);
+      dramaSlider.silentValue(dramaPer);
+      fantasySlider.silentValue(fantasyPer);
+      horrorSlider.silentValue(horrorPer);
+      scifiSlider.silentValue(scifiPer);
+      thrillerSlider.silentValue(thrillerPer);
+
+      actionValue = actionPer;
+      comedyValue = comedyPer;
+      dramaValue = dramaPer;
+      fantasyValue = fantasyPer;
+      horrorValue = horrorPer;
+      scifiValue = scifiPer;
+      thrillerValue = thrillerPer;
+
+      totalPercentageAfterSearch = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+      
+      actionSliderLabel.text("Action: " + d3.format('.0%')(actionPer));
+      comedySliderLabel.text("Comedy: " + d3.format('.0%')(comedyPer));
+      dramaSliderLabel.text("Drama: " + d3.format('.0%')(dramaPer));
+      fantasySliderLabel.text("Fantasy: " + d3.format('.0%')(fantasyPer));
+      horrorSliderLabel.text("Horror: " + d3.format('.0%')(horrorPer));
+      scifiSliderLabel.text("Sci-Fi: " + d3.format('.0%')(scifiPer));
+      thrillerSliderLabel.text("Thriller: " + d3.format('.0%')(thrillerPer));
+      SliderPersTotal.text("Total: " + (totalPercentageAfterSearch*100).toFixed(0) + "%");
+
+      updateFromCustomPers()
       
           }
           };
@@ -633,13 +663,35 @@
       // Draw the chart, get a reference the created svg element :
       let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions);
 	      
-      actionSlider.value(actionPer);
-      comedySlider.value(comedyPer);
-      dramaSlider.value(dramaPer);
-      fantasySlider.value(fantasyPer);
-      horrorSlider.value(horrorPer);
-      scifiSlider.value(scifiPer);
-      thrillerSlider.value(thrillerPer);
+      // Update sliders below
+      actionSlider.silentValue(actionPer);
+      comedySlider.silentValue(comedyPer);
+      dramaSlider.silentValue(dramaPer);
+      fantasySlider.silentValue(fantasyPer);
+      horrorSlider.silentValue(horrorPer);
+      scifiSlider.silentValue(scifiPer);
+      thrillerSlider.silentValue(thrillerPer);
+
+      actionValue = actionPer;
+      comedyValue = comedyPer;
+      dramaValue = dramaPer;
+      fantasyValue = fantasyPer;
+      horrorValue = horrorPer;
+      scifiValue = scifiPer;
+      thrillerValue = thrillerPer;
+
+      totalPercentageAfterSearch = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
+      
+      actionSliderLabel.text("Action: " + d3.format('.0%')(actionPer));
+      comedySliderLabel.text("Comedy: " + d3.format('.0%')(comedyPer));
+      dramaSliderLabel.text("Drama: " + d3.format('.0%')(dramaPer));
+      fantasySliderLabel.text("Fantasy: " + d3.format('.0%')(fantasyPer));
+      horrorSliderLabel.text("Horror: " + d3.format('.0%')(horrorPer));
+      scifiSliderLabel.text("Sci-Fi: " + d3.format('.0%')(scifiPer));
+      thrillerSliderLabel.text("Thriller: " + d3.format('.0%')(thrillerPer));
+      SliderPersTotal.text("Total: " + (totalPercentageAfterSearch*100).toFixed(0) + "%");
+
+      updateFromCustomPers()
       }
       })
   </script>
