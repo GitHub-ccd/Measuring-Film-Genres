@@ -123,6 +123,32 @@
             background-color: DodgerBlue !important; 
             color: #ffffff; 
             }
+	    
+	    table {
+                margin-left:auto; 
+                margin-right:auto;
+                border-collapse: collapse;
+            }
+            th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+            }
+
+            td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 6px;
+            }
+
+            tr:nth-child(even) {
+            background-color: #dddddd;
+            }
+
+            ol{
+                text-align: left;
+                font-size: 25px;
+            }
 		</style>
 
   </head>
@@ -1570,7 +1596,145 @@
        </script>
    </div>
    <!-- ----------------------------------------------- -->
-   
+<!-- Methodology Section Writing Part 1 -->
+<article>
+        <h2 text-align=left>Methodology</h2>
+        <p>When reviewing movies on IMDb, users can submit <a href="https://www.imdb.com/title/tt0468569/keywords?ref_=tt_stry_kw" target="_blank">plot keywords</a>. These tags give any movie a high-level description. I scraped the plot keywords and IMDb’s genre classification for any movie with at least 50,000 user reviews and 150 submitted keywords. This resulted in data on 2,167 movies, including only films listed in the action, comedy, drama, fantasy, horror, sci-fi, or thriller IMDb sections.</p>
+        <p>I then determined how often each keyword was used to describe films in each genre category. (after excluding keywords which were used to describe less than 44 films, which removed highly specific tags, like “klingon” or “hogwarts”). This began to give me a good understanding of the fundamental elements of each genre.</p>
+       
+        <h2>Most Common Words Used to Describe Each Genre</h2>
+<table width = 50%>
+        <tr>
+          <th>Rank</th>
+          <th>Action</th>
+          <th>Comedy</th>
+          <th>Drama</th>
+          <th>Fantasy</th>
+          <th>Horror</th>
+          <th>Sci-Fi</th>
+          <th>Thriller</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Murder</td>
+          <td>Friendship</td>
+          <td>Death</td>
+          <td>Death</td>
+          <td>Blood</td>
+          <td>Explosion</td>
+          <td>Murder</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Explosion</td>
+          <td>Title Spoken By Character</td>
+          <td>Husband Wife Relationship</td>
+          <td>No Opening Credits</td>
+          <td>Murder</td>
+          <td>Death</td>
+          <td>Death</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Violence</td>
+          <td>Father Son Relationship</td>
+          <td>Murder</td>
+          <td>Good Versus Evil</td>
+          <td>Death</td>
+          <td>Murder</td>
+          <td>Blood</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Pistol</td>
+          <td>Kiss</td>
+          <td>Blood</td>
+          <td>Rescue</td>
+          <td>Surprise Ending</td>
+          <td>Violence</td>
+          <td>Violence</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Death</td>
+          <td>Husband Wife Relationship</td>
+          <td>Father Son Relationship</td>
+          <td>Flashback</td>
+          <td>Violence</td>
+          <td>Chase</td>
+          <td>Pistol</td>
+        </tr>
+      </table>
+
+      <p>This ultimately does little to capture genres’ defining, unique features and to distinguish them another. Tropes such as death and relationships span across all genres. So while “murder” describes more action films than any other keyword, it’s also common in dramas, horrors, sci-fis, and thrillers. So if trying to get at what makes action unique, we need the keywords used often in action films but <i>not</i> often in other genres.</p>
+      
+      <h2>Most Genre-Specific Keywords</h2>
+      <table width = 50%>
+            <tr>
+              <th>Rank</th>
+              <th>Action</th>
+              <th>Comedy</th>
+              <th>Drama</th>
+              <th>Fantasy</th>
+              <th>Horror</th>
+              <th>Sci-Fi</th>
+              <th>Thriller</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Terrorist Plot</td>
+              <td>Slapstick Comedy</td>
+              <td>Based On True Story</td>
+              <td>Witch</td>
+              <td>Slasher</td>
+              <td>Space Travel</td>
+              <td>Police Corruption</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Semiautomatic Pistol</td>
+              <td>Flatulence</td>
+              <td>1940s</td>
+              <td>Magic</td>
+              <td>Supernatural Horror</td>
+              <td>Spacecraft</td>
+              <td>Die Hard Scenario</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>One Man Army</td>
+              <td>Masturbation</td>
+              <td>"Where Are They Now?" Epilogue</td>
+              <td>Princess</td>
+              <td>Body Count</td>
+              <td>Planet</td>
+              <td>Espionage</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Female Assassin</td>
+              <td>Dating</td>
+              <td>Depression</td>
+              <td>King</td>
+              <td>Serial Killer</td>
+              <td>Future</td>
+              <td>Neo Noir</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Espionage</td>
+              <td>On The Road</td>
+              <td>Drug Use</td>
+              <td>Queen</td>
+              <td>Darkness</td>
+              <td>Alien</td>
+              <td>Silencer</td>
+            </tr>
+          </table>
+          <p>To determine extent of uniqueness to a genre, I calculated the relative usage of each keyword for each genre. For example, “underwater scene” is used to describe action films 1.69x more often than other genres, sci-fi 1.43x more often, fantasy 1.42x more often, and all other genres less than the average usage. See how other keywords break down: </p>
+    
+    </article>
+	  
 <!-- Methodology section - Random Word Button & Corresponding Relative Usage Values Figure -->
 
 	<article>
@@ -1741,7 +1905,20 @@
     </script>
     </div>
 <!-- ----------------------------------------------- -->
+<article>
+<p>Finally, each movies’ keywords’ relative usage scores were used to calculate overall genre scores through summation. You can check out the .ipynb here.</p>
 
+<h2>Footnotes</h2>
+<ol>
+    <li>For the purposes of this project, I decided not to consider ‘romance’ as a genre. </li>
+        <ul>
+            <li>Mathematically, romance and drama correlate far too strongly with one another. I did initially include romance in the project, and found that the data often failed to distinguish romance and drama. This lead to splitting each other’s tag’s relative usage scores, essentially meaning the two genres cannibalized each other’s genre scores. This also happened between action and adventure when I included adventure as its own genre.</li>
+            <li>Operationally, romance is far more binary than action, fantasy, horror, etc. There is either a love story or there isn’t, making it pretty black and white. Compare this to action: you can have no action in a film, a lot of action, or anything in between. Romance is usually either there or it isn’t, with little room in the middle. Therefore, the romance genre doesn’t lend itself to gradient measurement very well. </li>
+        </ul>  
+    <li>The radar charts were created using a library written by <a href="https://gist.github.com/nbremer/21746a9668ffdf6d8242#file-radarchart-js" target="_blank">Nadieh Bremer</a> and updated by <a href="http://bl.ocks.org/mthh/7e17b680b35b83b49f1c22a3613bd89f" target="_blank">Matthieu Viry</a>.</li>
+    <li>The sliders were created using a library written by <a href="https://github.com/johnwalley/d3-simple-slider" target="_blank">John Walley</a>.</li>
+</ol>
+</article>
 
   </body>
 </html>
