@@ -1824,21 +1824,21 @@
 
                             randomNum = Math.floor((Math.random() * 1077) + 1);
 
-                            wordValue = wordDataSet[randomNum].word;
-                            actionValue = wordDataSet[randomNum].actionRelativeUsage;
-                            comedyValue = wordDataSet[randomNum].comedyRelativeUsage;
-                            dramaValue = wordDataSet[randomNum].dramaRelativeUsage;
-                            fantasyValue = wordDataSet[randomNum].fantasyRelativeUsage;
-                            horrorValue = wordDataSet[randomNum].horrorRelativeUsage;
-                            scifiValue = wordDataSet[randomNum].scifiRelativeUsage;
-                            thrillerValue = wordDataSet[randomNum].thrillerRelativeUsage;
+                            wordValue = wordDataSet[0][randomNum].word;
+                            actionWordValue = wordDataSet[0][randomNum].actionRelativeUsage;
+                            comedyWordValue = wordDataSet[0][randomNum].comedyRelativeUsage;
+                            dramaWordValue = wordDataSet[0][randomNum].dramaRelativeUsage;
+                            fantasyWordValue = wordDataSet[0][randomNum].fantasyRelativeUsage;
+                            horrorWordValue = wordDataSet[0][randomNum].horrorRelativeUsage;
+                            scifiWordValue = wordDataSet[0][randomNum].scifiRelativeUsage;
+                            thrillerWordValue = wordDataSet[0][randomNum].thrillerRelativeUsage;
 
                             wordLabel.text("Relative Usage of '"+wordValue+"' Tag In Each Genre");
                         
 
-                            wordValuesData = [parseFloat(actionValue),parseFloat(comedyValue),parseFloat(dramaValue),
-                                                parseFloat(fantasyValue),parseFloat(horrorValue),
-                                                parseFloat(scifiValue),parseFloat(thrillerValue)];
+                            wordValuesData = [parseFloat(actionWordValue),parseFloat(comedyWordValue),parseFloat(dramaWordValue),
+                                                parseFloat(fantasyWordValue),parseFloat(horrorWordValue),
+                                                parseFloat(scifiWordValue),parseFloat(thrillerWordValue)];
                             
                             yScale = d3.scaleLinear()
                                 .domain([0, d3.max(wordValuesData)])
