@@ -2,7 +2,8 @@
 <html>
   <head>
       <title>Measuring Film Genres</title>
-	  <meta property="og:description" content="Is it possible To quantify how 'Sci-Fi' a film Is? Up until now, there’s been no quantifying movie genre classifications. A movie was either a fantasy, or it isn’t. A movie was either a horror, or it isn’t. Now, we can determine the genre composition of any film."/>
+	  <meta property="og:image" content="https://imgur.com/a/yVNAXLb">
+	  <meta property="og:description" content="Is it possible To quantify how 'Sci-Fi' a film Is?"/>
 	  
         <script type="text/javascript" src="d3.js"></script>
         <script src="radarChart4.js" charset="utf-8"></script>
@@ -10,21 +11,17 @@
 
 
     <style type="text/css">
-
 			body {
 				text-align: center;
 			}
-
 			article {
 			    width: 50%;
 			    margin: 0 auto;
 			}
-
 			p {
 				font-size: 25px;
 			    text-align: left;
 			}
-
 			p.center {
 				font-size: 25px;
 				text-align: center;
@@ -45,9 +42,7 @@
 		    p.end{	
 			font-size: 150px;
 			color: white; 
-
 		    }
-
 			span {
 				font-size: 25px;
 			    text-align: center;
@@ -65,48 +60,39 @@
 				position:relative;
   				cursor: pointer;
 			}
-
 			h1{
 				font-size: 100px;
 				margin: 30px 0px 5px 0px; 
 			}
-
 			rect:hover {
 				fill: orange;
 			}
-
 			text{
 				pointer-events:none;
 			}
-
             * {
             box-sizing: border-box;
             }
-
             /*the container must be positioned relative:*/
             .autocomplete {
             position: relative;
             display: inline-block;
             }
-
             input {
             border: 1px solid transparent;
             background-color: #f1f1f1;
             padding: 10px;
             font-size: 16px;
             }
-
             input[type=text] {
             background-color: #f1f1f1;
             width: 100%;
             }
-
             input[type=submit] {
             background-color: DodgerBlue;
             color: #fff;
             cursor: pointer;
             }
-
             .autocomplete-items {
             position: absolute;
             border: 1px solid #d4d4d4;
@@ -119,19 +105,16 @@
             right: 0;
             text-align: left;
             }
-
             .autocomplete-items div {
             padding: 10px;
             cursor: pointer;
             background-color: #fff; 
             border-bottom: 1px solid #d4d4d4; 
             }
-
             /*when hovering an item:*/
             .autocomplete-items div:hover {
             background-color: #e9e9e9; 
             }
-
             /*when navigating through the items using the arrow keys:*/
             .autocomplete-active {
             background-color: DodgerBlue !important; 
@@ -148,17 +131,14 @@
             text-align: center;
             padding: 12px;
             }
-
             td {
             border: 1px solid #dddddd;
             text-align: center;
             padding: 6px;
             }
-
             tr:nth-child(even) {
             background-color: #dddddd;
             }
-
             ol{
                 text-align: left;
                 font-size: 25px;
@@ -216,11 +196,9 @@
 			//////////////////////////////////////////////////////////////
 			//////////////////////// Set-Up //////////////////////////////
 			//////////////////////////////////////////////////////////////
-
 			var margin = { top: 50, right: 80, bottom: 50, left: 80 },
 				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
 				height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
-
 			//////////////////////////////////////////////////////////////
 			////////////////////////// Data //////////////////////////////
 			//////////////////////////////////////////////////////////////       
@@ -237,14 +215,12 @@
                       ]
                 }
             ];
-
 			var radarChartOptions = {
 			  w: 290,
 			  h: 350,
 			  margin: margin,
               color: d3.scaleOrdinal().range(["blue"]),
 			};
-
 			// Draw the chart, get a reference the created svg element :
 			let svg_radar1 = RadarChart(".radarChart", data, radarChartOptions);
 		</script>
@@ -258,15 +234,12 @@
 <script>
     // this will hold movie data
     movieDataSet = []
-
     //An array to be filled with all the movie titles in the dataset - for the autofill
     movies = []
-
     d3.csv("moviesDataJan.csv", function(data){
         movieDataSet.push(data);
         movies.push(data.title + " ("+data.year+")")
     })
-
 </script>
 <!-- ============================== -->
 	  
@@ -357,9 +330,7 @@
             b.addEventListener("click", function(e) {
                 /*insert the value for the autocomplete text field:*/
                 inp.value = this.getElementsByTagName("input")[0].value;
-
                 /* Update the radar chart with new movie */
-
                 for (var i=0;i<2167; i++) {
           if (movieDataSet[i].title + " ("+movieDataSet[i].year+")" == document.getElementById("myInput").value) {
               
@@ -372,11 +343,8 @@
               horrorPer = movieDataSet[i].horrorPer;
               scifiPer = movieDataSet[i].scifiPer;
               thrillerPer = movieDataSet[i].thrillerPer;
-
-
               smallestDistance = 100;
                 dict = {};
-
                 // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
                 for (var i=0;i<2167; i++) {
                     var similarMovieTitle = movieDataSet[i].title;
@@ -388,7 +356,6 @@
                     var horrorPer2 = movieDataSet[i].horrorPer;
                     var scifiPer2 = movieDataSet[i].scifiPer;
                     var thrillerPer2 = movieDataSet[i].thrillerPer;
-
                     distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
                     
                     // Add movie info and similarity score to dictionary
@@ -402,12 +369,10 @@
                 var items = Object.keys(dict).map(function(key) {
                 return [key, dict[key]];
                 });
-
                 // Sort the array based on the second element
                 items.sort(function(first, second) {
                 return second[1] - first[1];
                 });
-
                 // Create a new array with only the first 5 items
                 mostSimilarMovies = items.slice(1, 6);
             
@@ -497,7 +462,6 @@
       horrorSlider.silentValue(horrorPer);
       scifiSlider.silentValue(scifiPer);
       thrillerSlider.silentValue(thrillerPer);
-
       actionValue = actionPer;
       comedyValue = comedyPer;
       dramaValue = dramaPer;
@@ -505,7 +469,6 @@
       horrorValue = horrorPer;
       scifiValue = scifiPer;
       thrillerValue = thrillerPer;
-
       totalPercentageAfterSearch = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
       
       actionSliderLabel.text("Action: " + d3.format('.0%')(actionPer));
@@ -516,14 +479,11 @@
       scifiSliderLabel.text("Sci-Fi: " + d3.format('.0%')(scifiPer));
       thrillerSliderLabel.text("Thriller: " + d3.format('.0%')(thrillerPer));
       SliderPersTotal.text("Total: " + (totalPercentageAfterSearch*100).toFixed(0) + "%");
-
       updateFromCustomPers()
       
           }
           };
           
-
-
                 /*close the list of autocompleted values,
                 (or any other open lists of autocompleted values:*/
                 closeAllLists();
@@ -615,7 +575,6 @@
           
               smallestDistance = 100;
                 dict = {};
-
                 // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
                 for (var i=0;i<2167; i++) {
                     var similarMovieTitle = movieDataSet[i].title;
@@ -627,7 +586,6 @@
                     var horrorPer2 = movieDataSet[i].horrorPer;
                     var scifiPer2 = movieDataSet[i].scifiPer;
                     var thrillerPer2 = movieDataSet[i].thrillerPer;
-
                     distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
                     
                     // Add movie info and similarity score to dictionary
@@ -641,16 +599,13 @@
                 var items = Object.keys(dict).map(function(key) {
                 return [key, dict[key]];
                 });
-
                 // Sort the array based on the second element
                 items.sort(function(first, second) {
                 return second[1] - first[1];
                 });
-
                 // Create a new array with only the first 5 items
                 mostSimilarMovies = items.slice(1, 6);
                 
-
                 if (Object.values(mostSimilarMovies)[0][0].length > 36){
                     var fontSize = "16px"
                 }
@@ -677,7 +632,6 @@
                 mostSimilar4Per.text(Object.values(mostSimilarMovies)[3][1].toFixed(0) + "%")
                 mostSimilar5.text(Object.values(mostSimilarMovies)[4][0]).style("font-size", fontSize)
                 mostSimilar5Per.text(Object.values(mostSimilarMovies)[4][1].toFixed(0) + "%")
-
           var margin = { top: 50, right: 80, bottom: 50, left: 80 },
           width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
           height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
@@ -735,7 +689,6 @@
       horrorSlider.silentValue(horrorPer);
       scifiSlider.silentValue(scifiPer);
       thrillerSlider.silentValue(thrillerPer);
-
       actionValue = actionPer;
       comedyValue = comedyPer;
       dramaValue = dramaPer;
@@ -743,7 +696,6 @@
       horrorValue = horrorPer;
       scifiValue = scifiPer;
       thrillerValue = thrillerPer;
-
       totalPercentageAfterSearch = parseFloat(actionValue)+parseFloat(comedyValue)+parseFloat(dramaValue)+parseFloat(fantasyValue)+parseFloat(horrorValue)+parseFloat(scifiValue)+parseFloat(thrillerValue)
       
       actionSliderLabel.text("Action: " + d3.format('.0%')(actionPer));
@@ -754,7 +706,6 @@
       scifiSliderLabel.text("Sci-Fi: " + d3.format('.0%')(scifiPer));
       thrillerSliderLabel.text("Thriller: " + d3.format('.0%')(thrillerPer));
       SliderPersTotal.text("Total: " + (totalPercentageAfterSearch*100).toFixed(0) + "%");
-
       updateFromCustomPers()
       }
       })
@@ -775,95 +726,80 @@
             .attr("font-weight","bold")
             .style("text-anchor", "middle")
             .text("Films With Similar Genre Scores");
-
         svgForSimilarMovies.append("text")
             .attr("x", 30)
             .attr("y", 75)
             .attr("font-size","20px")
             .text("1) ")
-
         var mostSimilar1 = svgForSimilarMovies.append("text")
             .attr("x", 52)
             .attr("y", 75)
             .attr("font-size","20px")
             .text("Thor: Ragnarok (2017)")
-
         var mostSimilar1Per = svgForSimilarMovies.append("text")
             .attr("x", 408)
             .attr("y", 75)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("98% Match")
-
         svgForSimilarMovies.append("text")
             .attr("x", 30)
             .attr("y", 150)
             .attr("font-size","20px")
             .text("2) ")
-
         var mostSimilar2 = svgForSimilarMovies.append("text")
             .attr("x", 52)
             .attr("y", 150)
             .attr("font-size","20px")
             .text("Justice League (2017)")
-
         var mostSimilar2Per = svgForSimilarMovies.append("text")
             .attr("x", 408)
             .attr("y", 150)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("98%")
-
         svgForSimilarMovies.append("text")
             .attr("x", 30)
             .attr("y", 225)
             .attr("font-size","20px")
             .text("3) ")
-
         var mostSimilar3 = svgForSimilarMovies.append("text")
             .attr("x", 52)
             .attr("y", 225)
             .attr("font-size","20px")
             .text("Star Wars: The Last Jedi (2017)")
-
         var mostSimilar3Per = svgForSimilarMovies.append("text")
             .attr("x", 408)
             .attr("y", 225)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("97%")
-
         svgForSimilarMovies.append("text")
             .attr("x", 30)
             .attr("y", 300)
             .attr("font-size","20px")
             .text("4) ")
-
         var mostSimilar4 = svgForSimilarMovies.append("text")
             .attr("x", 52)
             .attr("y", 300)
             .attr("font-size","20px")
             .text("Avengers: Age of Ultron (2015)")
-
         var mostSimilar4Per = svgForSimilarMovies.append("text")
             .attr("x", 408)
             .attr("y", 300)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("97%")
-
         svgForSimilarMovies.append("text")
             .attr("x", 30)
             .attr("y", 375)
             .attr("font-size","20px")
             .text("5) ")
-
         var mostSimilar5 = svgForSimilarMovies.append("text")
             .attr("x", 52)
             .attr("y", 375)
             .attr("font-size","20px")
             .text("Guardians of the Galaxy Vol. 2 (2017)")
-
         var mostSimilar5Per = svgForSimilarMovies.append("text")
             .attr("x", 408)
             .attr("y", 375)
@@ -884,7 +820,6 @@
 <!-- CUSTOM GENRE COMPOSITION SECTION -->
 <div id = "customCompSection">
         <script>
-
                 actionValue = 0
                 comedyValue = 0
                 dramaValue = 0
@@ -897,7 +832,6 @@
                             .append("svg")
                             .attr("width", 450)
                             .attr("height", 490);
-
                 // Title
                 sliderSvg.append("text")
                     .attr("x", 250)
@@ -1222,7 +1156,6 @@
                     .attr("y",430)
                     .attr('text-anchor','end')
                     .text("Thriller: 0%")
-
     // Add and Update similar List
   function updateFromCustomPers(){
               actionPer = actionValue;
@@ -1235,7 +1168,6 @@
           
               smallestDistance = 100;
                 dict = {};
-
                 // Again, loop over the entire dataset. For each movie, calculate distance from movie of interest
                 for (var i=0;i<2167; i++) {
                     var similarMovieTitle = movieDataSet[i].title;
@@ -1247,7 +1179,6 @@
                     var horrorPer2 = movieDataSet[i].horrorPer;
                     var scifiPer2 = movieDataSet[i].scifiPer;
                     var thrillerPer2 = movieDataSet[i].thrillerPer;
-
                     distance = 100 * Math.sqrt((actionPer - actionPer2)**2 + (comedyPer-comedyPer2)**2 + (dramaPer-dramaPer2)**2 + (fantasyPer-fantasyPer2)**2 + (horrorPer-horrorPer2)**2 + (scifiPer-scifiPer2)**2 + (thrillerPer-thrillerPer2)**2)
                     
                     // Add movie info and similarity score to dictionary
@@ -1261,16 +1192,13 @@
                 var items = Object.keys(dict).map(function(key) {
                 return [key, dict[key]];
                 });
-
                 // Sort the array based on the second element
                 items.sort(function(first, second) {
                 return second[1] - first[1];
                 });
-
                 // Create a new array with only the first 5 items
                 mostSimilarMovies = items.slice(1, 6);
                 
-
                 if (Object.values(mostSimilarMovies)[0][0].length > 36){
                     var fontSize = "16px"
                 }
@@ -1308,7 +1236,6 @@
                 if (Object.values(mostSimilarMovies)[4][1].toFixed(0) < 0) {
                     fontColor5 = "red"
                 }
-
                 mostSimilar1_2.text(Object.values(mostSimilarMovies)[0][0]).style("font-size", fontSize)
                 mostSimilar1Per_2.text(Object.values(mostSimilarMovies)[0][1].toFixed(0) + "% Match").attr("fill",fontColor1)   
                 mostSimilar2_2.text(Object.values(mostSimilarMovies)[1][0]).style("font-size", fontSize)
@@ -1326,7 +1253,6 @@
             .append("svg")
             .attr("width", 500)
             .attr("height", 490)
-
         //Create Title 
         svgForSimilarMovies_2.append("text")
             .attr("x", 250)
@@ -1336,95 +1262,80 @@
             .attr("font-weight","bold")
             .style("text-anchor", "middle")
             .text("Films With Similar Genre Scores");
-
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
             .attr("y", 75)
             .attr("font-size","20px")
             .text("1) ")
-
         var mostSimilar1_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 52)
             .attr("y", 75)
             .attr("font-size","20px")
             .text("Airplane! (1980)")
-
         var mostSimilar1Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 75)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("62% Match")
-
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
             .attr("y", 150)
             .attr("font-size","20px")
             .text("2) ")
-
         var mostSimilar2_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 52)
             .attr("y", 150)
             .attr("font-size","20px")
             .text("The Time Traveler's Wife (2009)")
-
         var mostSimilar2Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 150)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("62%")
-
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
             .attr("y", 225)
             .attr("font-size","20px")
             .text("3) ")
-
         var mostSimilar3_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 52)
             .attr("y", 225)
             .attr("font-size","20px")
             .text("Dude, Where's My Car? (2000)")
-
         var mostSimilar3Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 225)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("62%")
-
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
             .attr("y", 300)
             .attr("font-size","20px")
             .text("4) ")
-
         var mostSimilar4_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 52)
             .attr("y", 300)
             .attr("font-size","20px")
             .text("Alvin and the Chipmunks (2007)")
-
         var mostSimilar4Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 300)
             .attr("font-size","20px")
             .attr("fill","green")
             .text("61%")
-
         svgForSimilarMovies_2.append("text")
             .attr("x", 30)
             .attr("y", 375)
             .attr("font-size","20px")
             .text("5) ")
-
         var mostSimilar5_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 52)
             .attr("y", 375)
             .attr("font-size","20px")
             .text("Splash (1984)")
-
         var mostSimilar5Per_2 = svgForSimilarMovies_2.append("text")
             .attr("x", 408)
             .attr("y", 375)
@@ -1629,4 +1540,308 @@
 <!-- Methodology Section Writing Part 1 -->
 <article>
         <h2 id="methodology">Methodology</h2>
-        <p>When reviewing a movie on IMDb, users can submit <a href="https://www.imdb.com/title/tt0468569/keywords?ref_
+        <p>When reviewing a movie on IMDb, users can submit <a href="https://www.imdb.com/title/tt0468569/keywords?ref_=tt_stry_kw" target="_blank">plot keywords</a> to give the film a high-level description. I scraped these words for any movie with at least 50,000 user reviews and 150 submitted keywords. This resulted in data on 2,167 movies - only including films listed in the website’s action, comedy, drama, fantasy, horror, sci-fi, or thriller sections.</p>
+        <p>I then determined how often each keyword was used to describe films in each genre category (excluding keywords which were used to describe less than 2% of movies in the dataset, which removed overly-specific tags like “klingon” or “hogwarts”).</p>
+       
+        <h2>Most Common Words Used to Describe Each Genre</h2>
+<table width = 50%>
+        <tr>
+          <th>Rank</th>
+          <th>Action</th>
+          <th>Comedy</th>
+          <th>Drama</th>
+          <th>Fantasy</th>
+          <th>Horror</th>
+          <th>Sci-Fi</th>
+          <th>Thriller</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Murder</td>
+          <td>Friendship</td>
+          <td>Death</td>
+          <td>Death</td>
+          <td>Blood</td>
+          <td>Explosion</td>
+          <td>Murder</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Explosion</td>
+          <td>Title Spoken By Character</td>
+          <td>Husband Wife Relationship</td>
+          <td>No Opening Credits</td>
+          <td>Murder</td>
+          <td>Death</td>
+          <td>Death</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Violence</td>
+          <td>Father Son Relationship</td>
+          <td>Murder</td>
+          <td>Good Versus Evil</td>
+          <td>Death</td>
+          <td>Murder</td>
+          <td>Blood</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Pistol</td>
+          <td>Kiss</td>
+          <td>Blood</td>
+          <td>Rescue</td>
+          <td>Surprise Ending</td>
+          <td>Violence</td>
+          <td>Violence</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Death</td>
+          <td>Husband Wife Relationship</td>
+          <td>Father Son Relationship</td>
+          <td>Flashback</td>
+          <td>Violence</td>
+          <td>Chase</td>
+          <td>Pistol</td>
+        </tr>
+      </table>
+
+      <p>This ultimately did little to showcase unique features of genres and to distinguish them another, as most movie tropes are popular enough to span across all categories. “Murder,” for example, was used to describe more action movies than any other keyword, but it’s also a common occurrence in dramas, horrors, sci-fis, and thrillers. To uniquely describe “action,” we need the keywords which often describe action films but rarely describe films in other genres.</p>
+      
+      <h2>Most Genre-Specific Keywords</h2>
+      <table width = 50%>
+            <tr>
+              <th>Rank</th>
+              <th>Action</th>
+              <th>Comedy</th>
+              <th>Drama</th>
+              <th>Fantasy</th>
+              <th>Horror</th>
+              <th>Sci-Fi</th>
+              <th>Thriller</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Terrorist Plot</td>
+              <td>Slapstick Comedy</td>
+              <td>Based On True Story</td>
+              <td>Witch</td>
+              <td>Slasher</td>
+              <td>Space Travel</td>
+              <td>Police Corruption</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Semiautomatic Pistol</td>
+              <td>Flatulence</td>
+              <td>1940s</td>
+              <td>Magic</td>
+              <td>Supernatural Horror</td>
+              <td>Spacecraft</td>
+              <td>Die Hard Scenario</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>One Man Army</td>
+              <td>Masturbation</td>
+              <td>"Where Are They Now?" Epilogue</td>
+              <td>Princess</td>
+              <td>Body Count</td>
+              <td>Planet</td>
+              <td>Espionage</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Female Assassin</td>
+              <td>Dating</td>
+              <td>Depression</td>
+              <td>King</td>
+              <td>Serial Killer</td>
+              <td>Future</td>
+              <td>Neo Noir</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Espionage</td>
+              <td>On The Road</td>
+              <td>Drug Use</td>
+              <td>Queen</td>
+              <td>Darkness</td>
+              <td>Alien</td>
+              <td>Silencer</td>
+            </tr>
+          </table>
+	
+          <p>The most genre-specific keywords were determined by calculating the relative usage of each keyword for each genre. This helps evaluate how unique a keyword is to any genre. For example, “underwater scene” is used to describe action films 1.69x more often than other genres, sci-fi 1.43x more often, fantasy 1.42x more often, and all other genres less than the average usage. Meaning if we know a film has an underwater scene, we can presume it is likely more of an action, sci-fi, or fantasy than a horror, drama, or comedy. See how other keywords break down:</p>
+    
+    </article>
+	  
+<!-- Methodology section - Random Word Button & Corresponding Relative Usage Values Figure -->
+    
+<div id = "randomWordDiv">
+ 
+    <span id="randomWord">Random Word</span>
+    
+    <script>
+       
+        var wordLabel = d3.select("body").append("h2").text("");
+        //Width and height
+        var w2 = 750;
+        var h2 = 150;
+        var labelHeight = 50
+        var barPadding = 1;
+        // starter data
+        var wordValuesData = [0,0,0,0,0,0,0];
+        //Create SVG element
+        var svg2 = d3.select("body")
+            .append("svg")
+            .attr("width", w2)
+            .attr("height", h2);
+        var xScale = d3.scaleBand()
+            .domain(d3.range(wordValuesData.length))
+            .rangeRound([0, w2])
+            .paddingInner(0.05);
+        var yScale = d3.scaleLinear()
+            .domain([0, d3.max(wordValuesData)])
+            .range([0, h2]);
+        //Create bars
+        svg2.selectAll("rect")
+           .data(wordValuesData)
+           .enter()
+           .append("rect")
+           .attr("x", function(d, i) {
+                   return xScale(i);
+           })
+           .attr("y", function(d) {
+                   return h2 - yScale(d);
+           })
+           .attr("width", xScale.bandwidth())
+           .attr("height", function(d) {
+                   return yScale(d);
+           })
+           .attr("fill", function(d) {
+                return "rgb(100, 100, " + Math.round(d * 100) + ")";
+           });
+           svg2.selectAll("text")
+           .data(wordValuesData)
+           .enter()
+           .append("text")
+           .text(function(d) {
+                   return d;
+           })
+           .attr("x", function(d, i) {
+                   return i * (w2 / wordValuesData.length) + 5;
+           })
+           .attr("y", function(d) {
+                   return yScale(d) + 15;
+           })
+           .attr("font-family", "sans-serif")
+           .attr("font-size", "20px")
+           .attr("fill", "white");
+           var svgForLabels = d3.select("body")
+                    .append("svg")
+                    .attr("width", w2)
+                    .attr("height", labelHeight);
+            wordDataSet = []
+            d3.csv("wordsDataJan.csv", function(data){
+                wordDataSet.push(data);
+            })
+            d3.select("#randomWordDiv").selectAll("span").on("click", function() {
+                            randomNum = Math.floor((Math.random() * 1077) + 1);
+                            wordValue = wordDataSet[randomNum].word;
+                            actionWordValue = wordDataSet[randomNum].actionRelativeUsage;
+                            comedyWordValue = wordDataSet[randomNum].comedyRelativeUsage;
+                            dramaWordValue = wordDataSet[randomNum].dramaRelativeUsage;
+                            fantasyWordValue = wordDataSet[randomNum].fantasyRelativeUsage;
+                            horrorWordValue = wordDataSet[randomNum].horrorRelativeUsage;
+                            scifiWordValue = wordDataSet[randomNum].scifiRelativeUsage;
+                            thrillerWordValue = wordDataSet[randomNum].thrillerRelativeUsage;
+                            wordLabel.text("Relative Usage of '"+wordValue+"' Tag In Each Genre");
+                        
+                            wordValuesData = [parseFloat(actionWordValue),parseFloat(comedyWordValue),parseFloat(dramaWordValue),
+                                                parseFloat(fantasyWordValue),parseFloat(horrorWordValue),
+                                                parseFloat(scifiWordValue),parseFloat(thrillerWordValue)];
+                            
+                            yScale = d3.scaleLinear()
+                                .domain([0, d3.max(wordValuesData)])
+                                .range([0, h2/1.16]);
+                            svg2.selectAll("rect")
+                            .data(wordValuesData)
+                            .transition()
+                            .attr("x", function(d, i) {
+                                    return i * (w2 / wordValuesData.length);
+                            })
+                            .attr("y", function(d) {
+                                    return h2 - yScale(d);
+                            })
+                            .attr("width", w2 / wordValuesData.length - barPadding)
+                            .attr("height", function(d) {
+                                    return yScale(d);
+                            })
+                            .attr("fill", function(d) {
+                                    return "rgb(0, 0, " + Math.round(d * 100) + ")";
+                            });
+                        
+                            svg2.selectAll("text")
+                            .data(wordValuesData)
+                            .transition(2000)
+                            .text(function(d) {
+                                    return d.toFixed(2) + "x";
+                            })
+                            .attr("x", function(d, i) {
+                                    return i * (w2 / wordValuesData.length) + (w2 / wordValuesData.length / 2);
+                            })
+                            .attr("y", function(d) {
+                                    return h2 - yScale(d) - 5;
+                            })
+                            .attr("font-family", "sans-serif")
+                            .attr("font-size", "20px")
+                            .attr("text-anchor", "middle")
+                            .attr("text-align","center")
+                            .attr("font-weight","bold")
+                            .attr("fill", function(d) {
+                                    return "rgb(0, 0, " + Math.round(d * 100) + ")";
+                            });
+                        
+                            var graphLabels = ["Action", "Comedy", "Drama", "Fantasy", "Horror", "Sci-Fi", "Thriller"];
+                            
+                            //Add the SVG Text Element to the svgContainer
+                            var text = svgForLabels.selectAll("text")
+                                                    .data(graphLabels)
+                                                    .enter()
+                                                    .append("text");
+                            //Add SVG Text Element Attributes
+                            var textLabels = text
+                                            .attr("x", function(d,i){return (i*(w2 / graphLabels.length)+(w2/graphLabels.length/2))})
+                                            .attr("y", 15)
+                                            .text(function(d){return (d)})
+                                            .attr("font-family", "sans-serif")
+                                            .attr("font-size", "16px")
+                                            .attr("fill", "black")
+                                            .attr("font-weight","bold")
+                                            .attr("text-anchor", "middle");
+                        });
+    </script>
+    </div>
+<!-- ----------------------------------------------- -->
+<article>
+<p>Finally, any movie’s genre scores was calculated using its keywords’ relative usage scores and summation. For example, any movie containing the “underwater scene” keyword had its action, sci-fi, and fantasy scores slightly incremented. This same process would be applied to any keyword for which relative usage scores were calculated. You can check out the <a href="https://github.com/OGladfelter/Measuring-Film-Genres" target="_blank">data and .ipynb on GitHub</a>.</p>
+
+<h2>Footnotes</h2>
+<ol>
+    <li>For the purposes of this project, I did not include romance as a genre. </li>
+        <ul>
+            <li>I initially did include romance, only to find it correlated far too strongly with drama. This meant the data often failed to distinguish between the two genres, leading to lower relative usage scores and cannibalizing each other’s final genre scores. A similar phenomenon happened between action and adventure when adventure was included as its own genre.</li>
+            <li>Romance is far more binary than action, fantasy, horror, etc. There is either a love story or there isn’t, making it pretty black and white. Compare this to action: a film can have a lot of action, absolutely no action, or anything in between. Romance is usually either there or it isn’t, with little room in the middle. Therefore, the romance genre doesn’t lend itself to gradient measurement very well.</li>
+        </ul>  
+    <li>The radar charts were created using a library written by <a href="https://gist.github.com/nbremer/21746a9668ffdf6d8242#file-radarchart-js" target="_blank">Nadieh Bremer</a> and updated by <a href="http://bl.ocks.org/mthh/7e17b680b35b83b49f1c22a3613bd89f" target="_blank">Matthieu Viry</a>.</li>
+    <li>The sliders were created using a library written by <a href="https://github.com/johnwalley/d3-simple-slider" target="_blank">John Walley</a>.</li>
+    <li id="footnote4">The “Most __” Films were based on movies’ absolute genre scores used to calculate genre percentages, rather than the actual percentages themselves. This way, a film is not punished for scoring highly in more than one genres - such as RED 2, which has relatively lower action and thriller percentages because it has above average absolute scores in both categories. Scores are controlled for number of reviews received on IMDb, ensuring more popular films did not have an advantage over others.</li>
+</ol>
+</article>
+<hr>
+<p class="end">.</p>
+<div class="end"> </div>
+  </body>
+</html>
